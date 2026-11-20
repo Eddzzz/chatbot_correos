@@ -1,0 +1,48 @@
+/* Saved conversation: the same message and result components as the chatbot. */
+.system-main:has(.system-transcript) {
+  background: var(--sheet);
+}
+.system-transcript.messages {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 8px 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.system-transcript .message {
+  width: 100%;
+  min-width: 0;
+  margin-block: 0;
+}
+.system-transcript .question-entry {
+  width: fit-content;
+  max-width: 85%;
+  margin-left: auto;
+}
+.system-transcript .question-message {
+  font-size: 15px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.system-transcript .result-card {
+  margin: 0;
+  box-shadow: none;
+}
+.system-transcript .result-title h2 {
+  font-size: 23px;
+  line-height: 1.35;
+}
+.system-transcript .result-narrative p {
+  color: var(--ink);
+  line-height: 1.75;
+}
+.system-transcript .table-scroll th {
+  position: static;
+}
+@media (max-width: 600px) {
+  .system-transcript.messages { gap: 20px; }
+  .system-transcript .question-entry { max-width: 94%; }
+  .system-transcript .result-title h2 { font-size: 20px; }
+}

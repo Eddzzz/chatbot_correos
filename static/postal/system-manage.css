@@ -1,0 +1,45 @@
+/* Administration is a directory of tasks, with live context beside each group. */
+.system-main .manage-directory { max-width:1440px; margin:0 auto; }
+.system-main .manage-overview { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin:0 0 28px; padding:22px 0; border-bottom:1px solid var(--border); gap:24px; }
+.system-main .manage-overview>div { padding:0 24px; border-right:1px solid var(--border); }
+.system-main .manage-overview>div:first-child { padding-left:8px; }
+.system-main .manage-overview>div:last-child { border:0; }
+.system-main .manage-overview dt { color:var(--muted); font-size:13px; margin-bottom:8px; }
+.system-main .manage-overview dd { display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin:0; font-size:32px; font-weight:600; letter-spacing:-.03em; line-height:1.3; font-variant-numeric:tabular-nums; }
+.system-main .manage-overview dd>span { color:var(--muted); font-size:12px; font-weight:400; letter-spacing:normal; }
+.system-main .manage-area { display:grid; grid-template-columns:minmax(220px,.8fr) minmax(0,2fr); gap:32px; padding:26px 8px; border-top:1px solid var(--border); }
+.system-main .manage-area:first-of-type { border-top:0; padding-top:0; }
+.system-main .manage-area-intro { min-width:0; padding-top:14px; }
+.system-main .manage-area-intro h2 { display:flex; align-items:center; gap:10px; margin:0 0 9px; font-size:17px; font-weight:650; letter-spacing:-.025em; line-height:1.5; }
+.system-main .manage-area-intro h2 .icon { width:18px; height:18px; color:var(--muted); flex-shrink:0; }
+.system-main .manage-area-intro p { color:var(--muted); font-size:13px; line-height:1.7; max-width:34ch; margin:0 0 12px; }
+.system-main .manage-detail { display:block; color:var(--muted); font-size:12px; line-height:1.7; overflow-wrap:anywhere; }
+.system-main .manage-agent-states { display:flex; flex-wrap:wrap; gap:8px 16px; }
+.system-main .manage-state { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+.system-main .manage-state::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
+.system-main .manage-state.is-active { color:var(--emerald-600); }
+.system-main .manage-destinations { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; gap:12px; min-width:0; }
+.system-main .manage-destination { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:104px; padding:20px; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--ink); text-decoration:none; }
+.system-main .manage-destination>span { min-width:0; }
+.system-main .manage-destination strong { display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; font-size:14px; font-weight:600; line-height:1.5; }
+.system-main .manage-destination small { display:block; color:var(--muted); font-size:12px; line-height:1.7; margin-top:5px; }
+.system-main .manage-destination em { font-size:11px; font-style:normal; font-weight:500; color:var(--muted); background:var(--subtle); padding:2px 7px; border-radius:4px; white-space:nowrap; }
+.system-main .manage-destination>.icon { width:18px; height:18px; flex-shrink:0; color:var(--muted); }
+.system-main .manage-destination:hover { background:var(--subtle); border-color:var(--blue); text-decoration:none; }
+.system-main .manage-destination:hover strong,.system-main .manage-destination:hover>.icon { color:var(--blue); }
+.system-main .manage-destination:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+.system-main .manage-create { border-color:var(--agbc-gold-600); }
+.system-main .manage-create>.icon { color:var(--agbc-navy-950); background:var(--agbc-gold-400); width:30px; height:30px; padding:6px; border-radius:6px; }
+@media(max-width:1200px) { .system-main .manage-area { grid-template-columns:minmax(190px,.7fr) minmax(0,1.5fr); gap:24px; } .system-main .manage-destinations { grid-template-columns:1fr; } }
+@media(max-width:700px) {
+  .system-main .manage-overview { gap:10px; margin-bottom:22px; padding:8px 0 20px; }
+  .system-main .manage-overview>div { padding:0 10px; }
+  .system-main .manage-overview>div:first-child { padding-left:0; }
+  .system-main .manage-overview dt { font-size:11px; line-height:1.6; }
+  .system-main .manage-overview dd { font-size:26px; gap:3px; }
+  .system-main .manage-overview dd>span { flex-basis:100%; font-size:11px; }
+  .system-main .manage-area { grid-template-columns:1fr; gap:16px; padding:22px 0; }
+  .system-main .manage-area-intro { padding-top:0; }
+  .system-main .manage-area-intro p { max-width:none; margin-bottom:6px; }
+  .system-main .manage-destination { padding:16px; min-height:90px; }
+}

@@ -1,0 +1,76 @@
+{% load l10n %}
+{{ chart_data|json_script:'dashboard-data' }}
+<dl class="dashboard-metrics reference-kpis">
+  <div class="bento-cell bento-kpi is-hero">
+    <dt class="kpi-head"><span class="kpi-title">Tokens informados</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='plus' %}</span></dt>
+    <dd class="kpi-big-num" data-number="{{ analytics.totals.tokens|default_if_none:'' }}">{{ analytics.totals.tokens|default_if_none:'—' }}</dd>
+    <div class="kpi-sub-row"><span>Período previo</span><span data-number="{{ analytics.previous_tokens|default_if_none:'' }}">{{ analytics.previous_tokens|default_if_none:'—' }}</span></div>
+  </div>
+  <div class="bento-cell bento-kpi">
+    <dt class="kpi-head"><span class="kpi-title">{% if available_tokens.stale %}Última cuota informada{% else %}Tokens disponibles{% endif %}</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='chart' %}</span></dt>
+    <dd class="kpi-big-num" id="available-tokens" data-number="{{ available_tokens.remaining|default_if_none:'' }}">{% if available_tokens %}{{ available_tokens.remaining }}{% else %}—{% endif %}</dd>
+    <div class="kpi-sub-row">
+      {% if available_tokens %}<span>{{ current_provider }} · Por minuto{% if available_tokens.limit != None %} · Límite {{ available_tokens.limit }}{% endif %}<br>Informado el <time datetime="{{ available_tokens.observed_at|date:'c' }}">{{ available_tokens.observed_at|date:'d/m H:i:s' }}</time>{% if available_tokens.stale %}<br>Reporte anterior; la cuota actual puede variar.{% endif %}</span>
+      {% elif current_provider == 'Groq' %}<span>Sin reporte de cuota.<br>Se obtiene cuando el proveedor responde al asistente.</span>
+      {% else %}<span>El proveedor no informa esta cuota.</span>{% endif %}
+    </div>
+  </div>
+  <div class="bento-cell bento-kpi">
+    <dt class="kpi-head"><span class="kpi-title">Generaciones registradas</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='chart' %}</span></dt>
+    <dd class="kpi-big-num" data-number="{{ analytics.totals.calls }}">{{ analytics.totals.calls }}</dd>
+    <div class="kpi-sub-row">Respuestas con datos de uso</div>
+  </div>
+  <div class="bento-cell bento-kpi">
+    <dt class="kpi-head"><span class="kpi-title">Usuarios con actividad IA</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='shield' %}</span></dt>
+    <dd class="kpi-big-num" data-number="{{ analytics.totals.users }}">{{ analytics.totals.users }}</dd>
+    <div class="kpi-sub-row">Cuentas con consumo registrado</div>
+  </div>
+  <div class="bento-cell bento-kpi">
+    <dt class="kpi-head"><span class="kpi-title">Chats registrados</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='chat' %}</span></dt>
+    <dd class="kpi-big-num" data-number="{{ analytics.totals.chats }}">{{ analytics.totals.chats }}</dd>
+    <div class="kpi-sub-row">Guardados o importados en el período</div>
+  </div>
+</dl>
+<div class="dashboard-grid bento-dashboard">
+  <section class="dashboard-panel bento-cell span-8 dashboard-main-chart">
+    <div class="cell-head"><div class="cell-titles"><h2>Consumo de tokens</h2><p>Volumen {% if analytics.hourly %}por hora{% else %}diario{% endif %} informado por el proveedor, en horario de Bolivia.</p></div><span class="badge-soft">{{ analytics.days }} día{{ analytics.days|pluralize:'s' }}</span></div>
+    <div id="tokens-chart" class="dashboard-chart bento-chart-box" aria-label="Tokens informados por {% if analytics.hourly %}hora{% else %}día{% endif %}"></div>
+    <div class="cell-foot"><span>Solo consumo informado por la API.</span>{% if analytics.unknown_calls %}<span>{{ analytics.unknown_calls }} generaciones sin total informado.</span>{% endif %}</div>
+    <details class="dashboard-data-table bento-drawer"><summary>Ver datos del gráfico</summary><div class="system-table" tabindex="0" role="region" aria-label="Consumo {% if analytics.hourly %}por hora{% else %}diario{% endif %}"><table><thead><tr><th>{% if analytics.hourly %}Hora{% else %}Fecha{% endif %}</th><th class="num">Tokens</th><th class="num">Generaciones</th></tr></thead><tbody>{% for day in chart_data.daily %}<tr><td>{% if analytics.hourly %}{{ day.label }}{% else %}{{ day.date }}{% endif %}</td><td class="num">{{ day.tokens|default_if_none:'—' }}</td><td class="num">{{ day.calls|default_if_none:'—' }}</td></tr>{% endfor %}</tbody></table></div></details>
+  </section>
+  <section class="dashboard-panel dashboard-operations bento-cell span-4">
+    <div class="cell-head"><div class="cell-titles"><h2>Operación reciente</h2><p>Resolución de consultas en las últimas 24 h.</p></div><span class="badge-soft">24 h</span></div>
+    <div class="sla-Showcase">
+      <div class="sla-donut" aria-hidden="true"><svg viewBox="0 0 68 68"><circle cx="34" cy="34" r="29" fill="none" stroke="var(--border-hairline)" stroke-width="6"/>{% if analytics.recent_jobs.success_rate != None %}<circle cx="34" cy="34" r="29" fill="none" stroke="var(--emerald-500)" stroke-width="6" stroke-linecap="round" pathLength="100" stroke-dasharray="{{ analytics.recent_jobs.success_rate|unlocalize }} 100"/>{% endif %}</svg><span class="sla-donut-center">{% if analytics.recent_jobs.success_rate != None %}{{ analytics.recent_jobs.success_rate }}%{% else %}—{% endif %}</span></div>
+      <div class="sla-copy"><strong>{% if analytics.recent_jobs.success_rate != None %}{{ analytics.recent_jobs.success_rate }}%{% else %}—{% endif %}</strong><span>Éxito en trabajos resueltos</span></div>
+    </div>
+    <dl class="dashboard-key-values sla-metrics-grid">
+      <div class="sla-stat-box"><dt class="sla-stat-label"><span class="sla-swatch is-success" aria-hidden="true"></span>Completados</dt><dd>{{ analytics.recent_jobs.success }}</dd></div>
+      <div class="sla-stat-box"><dt class="sla-stat-label"><span class="sla-swatch is-warning" aria-hidden="true"></span>Aclaraciones</dt><dd>{{ analytics.recent_jobs.clarifications }}</dd></div>
+      <div class="sla-stat-box"><dt class="sla-stat-label"><span class="sla-swatch is-error" aria-hidden="true"></span>Con error</dt><dd class="{% if analytics.recent_jobs.failed %}system-negative{% endif %}">{{ analytics.recent_jobs.failed }}</dd></div>
+      <div class="sla-stat-box"><dt class="sla-stat-label"><span class="sla-swatch is-neutral" aria-hidden="true"></span>Cancelados</dt><dd>{{ analytics.recent_jobs.cancelled }}</dd></div>
+    </dl>
+    <div class="cell-foot"><span>En curso: <strong>{{ active_jobs }}</strong></span></div>
+    <p>Las aclaraciones y cancelaciones no cuentan como fallos. Se incluyen resultados conservados de las últimas 24 h.</p>
+  </section>
+  <section class="dashboard-panel bento-cell span-6">
+    <div class="cell-head"><div class="cell-titles"><h2>Generaciones registradas</h2><p>Respuestas y reintentos con datos de uso informados por {% if analytics.hourly %}hora{% else %}día{% endif %}.</p></div><span class="badge-soft">Por {% if analytics.hourly %}hora{% else %}día{% endif %}</span></div>
+    <div id="calls-chart" class="dashboard-chart bento-chart-box" aria-label="Generaciones con uso informado por {% if analytics.hourly %}hora{% else %}día{% endif %}"></div>
+    <p class="cell-foot">Cada generación con uso registrado cuenta una vez.</p>
+  </section>
+  <section class="dashboard-panel bento-cell span-6">
+    <div class="cell-head"><div class="cell-titles"><h2>Consumo por modelo</h2><p>Distribución de tokens por modelo y proveedor.</p></div><a href="?view=models">Configurar →</a></div>
+    <div class="dashboard-ranking models-stack">{% for item in analytics.models %}<div class="dashboard-rank-row model-row-card"><div><strong>{{ item.model }}</strong><span>{{ item.provider }} · {{ item.calls }} generaciones</span></div><span class="num" data-number="{{ item.tokens|default_if_none:'' }}">{{ item.tokens|default_if_none:'—' }}</span><div class="dashboard-rank-track bar-rail"><span data-bar="{{ item.tokens|default_if_none:'0' }}"></span></div></div>{% empty %}<div class="dashboard-empty empty-state-minimal">No hay consumo registrado en este período. Las consultas nuevas aparecerán cuando el proveedor informe su uso.</div>{% endfor %}</div>
+  </section>
+  <section class="dashboard-panel dashboard-pipeline dashboard-detail bento-cell span-6">
+    <div class="cell-head"><div class="cell-titles"><h2>Planificación y análisis</h2><p>Estado y consumo de los agentes.</p></div><a href="?view=agents">Configurar agentes →</a></div>
+    <div class="pipeline-provider"><div><strong>{{ current_provider }}</strong><span>{{ current_model|default:'Modelo sin definir' }}</span></div><span class="system-status {% if provider_configured %}is-configured{% endif %}">{% if provider_configured %}Clave configurada{% else %}Requiere clave{% endif %}</span><a href="?view=models">Configurar proveedor</a></div>
+    <dl class="pipeline-agents"><div><dt>Planificador</dt><dd>{{ planner_enabled|yesno:'Activo,Inactivo' }}</dd></div><div><dt>Analista</dt><dd>{{ analyst_enabled|yesno:'Activo,Inactivo' }}</dd></div></dl>
+    <div class="pipeline-usage">{% for item in analytics.stages %}<div><h3>{% if item.stage == 'planner' %}Planificador SQL{% elif item.stage == 'analyst' %}Analista postal{% else %}Otra generación{% endif %}</h3><p><strong data-number="{{ item.tokens|default_if_none:'' }}">{{ item.tokens|default_if_none:'—' }}</strong> tokens</p><span>{{ item.calls }} generaciones</span></div>{% empty %}<p class="dashboard-empty">No hay consumo registrado de los agentes en este período.</p>{% endfor %}</div>
+  </section>
+  <section class="dashboard-panel dashboard-user-usage dashboard-detail bento-cell span-6">
+    <div class="cell-head"><div class="cell-titles"><h2>Consumo por usuario</h2><p>Uso registrado por cuenta en este período.</p></div><a href="?view=users">Gestionar usuarios →</a></div>
+    {% if analytics.users %}<div class="system-table clean-table-wrap" tabindex="0" role="region" aria-label="Consumo por usuario"><table class="clean-table"><thead><tr><th>Cuenta</th><th class="num">Generaciones</th><th class="num">Tokens</th></tr></thead><tbody>{% for item in analytics.users %}<tr><td>{{ item.user__username|default:'Usuario eliminado' }}</td><td class="num">{{ item.calls }}</td><td class="num" data-number="{{ item.tokens|default_if_none:'' }}">{{ item.tokens|default_if_none:'—' }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="usage-empty"><div><strong>Sin consumo por usuario en este período.</strong><p>Las cuentas aparecerán aquí cuando tengan uso registrado.</p></div></div>{% endif %}
+  </section>
+</div>
+<p class="dashboard-scope-note">El registro de tokens comienza con la instalación de la administración. Un guion indica que la API no informó el valor; cero es un valor real. No representa saldo ni facturación. Los chats eliminados definitivamente ya no forman parte del historial conservado.</p>

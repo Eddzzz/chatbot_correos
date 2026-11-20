@@ -1,0 +1,30 @@
+<div class="health-workspace" id="health">
+  <dl class="health-summary" aria-label="Resumen del estado">
+    <div><dt>Usuarios con actividad</dt><dd>{{ health.active_users }}</dd><small>Con consultas registradas</small></div>
+    <div><dt>Consultas en curso</dt><dd>{{ active_jobs }}</dd><small>En cola o ejecutándose</small></div>
+    <div><dt>Archivos temporales</dt><dd>{{ health.files }}</dd><small>Vigencia de {{ health.ttl_hours }} horas</small></div>
+    <div><dt>Espacio ocupado</dt><dd>{{ health.bytes|filesizeformat }}</dd><small>Resultados almacenados</small></div>
+  </dl>
+  <section class="health-panel" aria-labelledby="health-users-title">
+    <div class="health-panel-heading"><div><h2 id="health-users-title">Estado por usuario</h2><p>Consultas registradas y espacio utilizado por cada cuenta.</p></div><span>{{ health.users.paginator.count }} cuentas</span></div>
+    <div class="health-table-wrap"><table class="health-table">
+      <thead><tr><th scope="col">Usuario</th><th scope="col">En curso</th><th scope="col">Archivos</th><th scope="col">Espacio</th><th scope="col">Última consulta</th><th scope="col"><span class="health-sr-only">Acciones</span></th></tr></thead>
+      <tbody>{% for account in health.users %}<tr>
+        <td><div class="health-identity"><span class="health-avatar" aria-hidden="true">{{ account.username|first|upper }}</span><div><strong>{{ account.first_name }} {{ account.last_name }}{% if not account.first_name and not account.last_name %}{{ account.username }}{% endif %}</strong><small>@{{ account.username }}{% if not account.is_active %} · Inactivo{% endif %}</small></div></div></td>
+        <td data-label="En curso">{% if account.active %}<span class="health-running">{{ account.active }} en curso</span>{% else %}0{% endif %}</td>
+        <td data-label="Archivos">{{ account.files }}</td><td data-label="Espacio">{{ account.bytes|filesizeformat }}</td>
+        <td data-label="Última consulta">{{ account.latest|date:'d/m/Y H:i'|default:'Sin consultas' }}</td>
+        <td><a href="?view=chats&amp;user={{ account.id }}" aria-label="Ver conversaciones de {{ account.username }}">Ver conversaciones {% include 'postal/_icon.html' with name='arrow' %}</a></td>
+      </tr>{% empty %}<tr><td colspan="6">No hay usuarios registrados.</td></tr>{% endfor %}</tbody>
+    </table></div>
+    <div class="health-table-footer"><span>Los archivos y el espacio corresponden a los resultados presentes en el servidor.</span>{% if health.users.has_other_pages %}<nav aria-label="Páginas de usuarios">{% if health.users.has_previous %}<a href="?view=health&amp;page={{ health.users.previous_page_number }}">Anterior</a>{% endif %}<span>{{ health.users.number }} de {{ health.users.paginator.num_pages }}</span>{% if health.users.has_next %}<a href="?view=health&amp;page={{ health.users.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}</div>
+    {% if health.unassigned_files %}<p class="health-unassigned">Sin usuario asociado: {{ health.unassigned_files }} archivos · {{ health.unassigned_bytes|filesizeformat }}. Incluidos en el resumen global.</p>{% endif %}
+  </section>
+  <div class="health-bottom">
+    <section class="health-panel" aria-labelledby="health-connections-title"><h2 id="health-connections-title">Conexiones configuradas</h2><dl class="health-connections"><div><dt>Origen postal</dt><dd>{{ database.engine }}</dd></div><div><dt>Servidor postal</dt><dd>{{ database.host }}</dd></div><div><dt>Base postal</dt><dd>{{ database.name }}</dd></div><div><dt>Base de cuentas y chats</dt><dd>{{ database.accounts }}</dd></div></dl></section>
+    <section class="health-panel" aria-labelledby="health-maintenance-title"><h2 id="health-maintenance-title">Mantenimiento</h2><p>Comprueba las conexiones o libera resultados vencidos. Se conservan los resultados vigentes y las consultas en curso.</p>
+      {% if diagnostic %}<p class="notice" role="status">{{ diagnostic }}</p>{% endif %}
+      <div class="system-actions"><form method="post">{% csrf_token %}<button name="action" value="check_database" class="button">Comprobar conexión DB</button></form><form method="post" data-confirm="¿Limpiar la caché y los resultados vencidos? Los chats activos se conservan.">{% csrf_token %}<button name="action" value="cleanup" class="button">Limpiar caché vencida</button></form></div>
+    </section>
+  </div>
+</div>

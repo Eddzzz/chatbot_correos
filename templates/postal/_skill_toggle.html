@@ -1,0 +1,5 @@
+<form method="post">
+  {% csrf_token %}<input type="hidden" name="skill_id" value="{{ skill.pk }}">
+  <input type="hidden" name="enabled" value="{{ skill.enabled|yesno:'0,1' }}">
+  <button type="submit" name="action" value="skill_toggle" aria-label="{% if skill.enabled %}Desactivar{% else %}Activar{% endif %} {{ skill.name }}">{% if skill.enabled %}Desactivar{% else %}Activar{% endif %}</button>
+</form>

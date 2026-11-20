@@ -1,0 +1,77 @@
+{% load postal_static %}
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark">
+<title>{% block title %}{{ view_title|default:'Administración' }}{% endblock %} · Correos de Bolivia</title>
+<link rel="icon" href="{% versioned_static 'postal/assets/favicon.svg' %}" type="image/svg+xml">
+<script src="{% versioned_static 'postal/theme.js' %}"></script>
+<script src="{% versioned_static 'postal/system-nav-init.js' %}"></script>
+<link rel="stylesheet" href="{% versioned_static 'postal/app.css' %}">
+<link rel="stylesheet" href="{% versioned_static 'postal/system.css' %}">
+<link rel="stylesheet" href="{% versioned_static 'postal/system-bento.css' %}">
+<link rel="stylesheet" href="{% versioned_static 'postal/system-reference.css' %}">
+{% if active_view == 'manage' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-manage.css' %}">{% endif %}
+{% if active_view == 'users' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-users.css' %}">{% endif %}
+{% if active_view == 'chats' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-chats.css' %}">{% endif %}
+{% if active_view == 'skills' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-skills.css' %}">{% endif %}
+{% if active_view == 'audit' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-audit.css' %}">{% endif %}
+{% if active_view == 'network' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-network.css' %}"><script src="{% versioned_static 'postal/system-network.js' %}" defer></script>{% endif %}
+{% if active_view == 'health' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-health.css' %}">{% endif %}
+{% if active_view == 'tables' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-users.css' %}"><link rel="stylesheet" href="{% versioned_static 'postal/system-tables.css' %}">{% endif %}
+{% if active_view == 'models' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-users.css' %}"><link rel="stylesheet" href="{% versioned_static 'postal/system-models.css' %}">{% endif %}
+<script src="{% versioned_static 'postal/system-charts.js' %}" defer></script>
+<script src="{% versioned_static 'postal/system.js' %}" defer></script>
+{% block extra_head %}{% endblock %}
+{% if active_view == 'agents' %}<link rel="stylesheet" href="{% versioned_static 'postal/system-agents.css' %}"><script src="{% versioned_static 'postal/system-agents.js' %}" defer></script>{% endif %}
+</head><body class="system-page" data-app-style="framed-sheet">
+{% include 'postal/_icons.html' %}
+<a class="skip-link" href="#system-content">Ir al contenido</a>
+{{ request.api_identity|json_script:'api-identity' }}
+<aside id="system-sidebar" class="system-sidebar" aria-label="Navegación administrativa">
+<a href="/system/" class="system-brand" aria-label="Bolipost · Administración"><img class="system-brand-full" src="{% versioned_static 'postal/assets/correos-bolivia.png' %}" alt="Correos de Bolivia" width="142" height="53"><span class="system-brand-letter" aria-hidden="true"><img src="{% versioned_static 'postal/assets/correos-bolivia.png' %}" alt="" width="2170" height="725"></span><span class="system-brand-caption">Administración</span></a>
+<a href="/" class="system-chat-shortcut">{% include 'postal/_icon.html' with name='arrow-left' %}<span>Volver al chat</span></a>
+<nav class="system-nav" aria-label="Secciones de administración">
+{% if user.is_superuser %}
+<div class="system-nav-section" role="group" aria-labelledby="nav-activity">
+<h2 id="nav-activity" class="system-nav-label">Actividad</h2>
+<a href="/system/?view=overview" {% if active_view == 'overview' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='chart' %} Resumen y analíticas</a>
+<a href="/system/?view=chats" {% if active_view == 'chats' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='chat' %} Conversaciones</a>
+<a href="/system/?view=users" class="system-users-link" {% if active_view == 'users' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='users' %} Gestión de usuarios</a>
+</div>
+<div class="system-nav-section" role="group" aria-labelledby="nav-assistant">
+<h2 id="nav-assistant" class="system-nav-label">Asistente IA</h2>
+<a href="/system/?view=models" {% if active_view == 'models' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='cpu' %} Modelos y API</a>
+<a href="/system/?view=agents" {% if active_view == 'agents' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='bot' %} Agentes y tokens</a>
+<a href="/system/?view=skills" {% if active_view == 'skills' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='puzzle' %} Gestor de skills</a>
+</div>
+<div class="system-nav-section" role="group" aria-labelledby="nav-system">
+<h2 id="nav-system" class="system-nav-label">Sistema</h2>
+<a href="/system/?view=tables" {% if active_view == 'tables' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='catalog' %} Permisos de tablas</a>
+<a href="/system/?view=network" {% if active_view == 'network' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='database' %} Red y base de datos</a>
+<a href="/system/?view=health" {% if active_view == 'health' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='activity' %} Estado y caché</a>
+<a href="/system/?view=audit" {% if active_view == 'audit' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='audit' %} Auditoría</a>
+<a href="/system/?view=manage" {% if active_view == 'manage' %}aria-current="page"{% endif %}>{% include 'postal/_icon.html' with name='settings' %} Administrar</a>
+</div>
+{% endif %}
+<div class="system-nav-section system-nav-personal" role="group" aria-labelledby="nav-account">
+<h2 id="nav-account" class="system-nav-label">Mi cuenta</h2>
+<a href="/trash/">{% include 'postal/_icon.html' with name='trash' %} Mi papelera</a>
+</div>
+</nav>
+<div class="system-account" title="{{ user.username }}"><span class="system-avatar">{{ user.username|first|upper }}</span><div><strong>{{ user.username }}</strong><span>{% if user.is_superuser %}Administrador{% else %}Usuario{% endif %}</span></div></div>
+<div class="system-sidebar-tools">
+<button id="system-theme" class="icon-button" type="button" aria-label="Cambiar tema" title="Cambiar tema">{% include 'postal/_icon.html' with name='moon' %}</button>
+<button id="system-collapse" type="button" class="icon-button" aria-controls="system-sidebar" aria-expanded="true" aria-label="Contraer barra lateral" title="Contraer barra lateral"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 4v16m8-12-4 4 4 4"/></svg></button></div>
+</aside>
+<button id="system-backdrop" class="system-backdrop" aria-label="Cerrar navegación" hidden></button>
+<header class="system-topbar">
+<div class="system-header-start"><button id="system-menu" type="button" class="icon-button" aria-controls="system-sidebar" aria-expanded="false" aria-label="Abrir navegación">{% include 'postal/_icon.html' with name='menu' %}</button></div>
+<div class="system-header-copy">{% block system_header %}<span class="system-kicker">Bolipost · Administración</span><h1 id="system-view-title">{{ view_title|default:'Mi cuenta' }}</h1>{% endblock %}</div>
+<div class="system-top-actions">{% block system_header_actions %}{% endblock %}</div>
+</header>
+<main id="system-content" class="system-main" tabindex="-1" aria-labelledby="system-view-title">
+{% if messages %}<div class="system-feedback" role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+{% block content %}{% endblock %}
+</main>
+<div id="system-announcement" class="toast" role="status" hidden></div>
+</body></html>

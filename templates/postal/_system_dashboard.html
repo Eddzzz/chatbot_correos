@@ -1,0 +1,14 @@
+{% load l10n %}
+<div class="dashboard-controls">
+  <form class="system-range" method="get">
+    <input type="hidden" name="view" value="overview"><label for="analytics-days">Período</label>
+    <select id="analytics-days" name="days" aria-controls="analytics-custom"><option value="1" {% if analytics_period == '1' %}selected{% endif %}>Último día</option><option value="7" {% if analytics_period == '7' %}selected{% endif %}>Últimos 7 días</option><option value="30" {% if analytics_period == '30' %}selected{% endif %}>Últimos 30 días</option><option value="90" {% if analytics_period == '90' %}selected{% endif %}>Últimos 90 días</option><option value="custom" {% if custom_period %}selected{% endif %}>Personalizado</option></select>
+    <fieldset id="analytics-custom" class="analytics-custom" aria-label="Rango personalizado, hasta 366 días" {% if not custom_period %}hidden disabled{% endif %}>
+      <label for="{{ analytics_range.start.id_for_label }}">Desde {{ analytics_range.start }}</label>
+      <label for="{{ analytics_range.end.id_for_label }}">Hasta {{ analytics_range.end }}</label>
+    </fieldset>
+    <button type="submit" class="button primary">Aplicar</button>
+    {% if analytics_range.errors %}<div class="analytics-range-errors" role="alert">{{ analytics_range.non_field_errors }}{{ analytics_range.start.errors }}{{ analytics_range.end.errors }}</div>{% endif %}
+  </form>
+</div>
+<div id="dashboard-live">{% include "postal/_system_dashboard_values.html" %}</div>

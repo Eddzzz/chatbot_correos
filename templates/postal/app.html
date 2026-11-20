@@ -1,0 +1,59 @@
+{% load postal_static %}
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Correos de Bolivia · Asistente postal</title>
+<link rel="icon" href="{% versioned_static 'postal/assets/favicon.svg' %}" type="image/svg+xml"><script src="{% versioned_static 'postal/theme.js' %}"></script><link rel="stylesheet" href="{% versioned_static 'postal/app.css' %}"><script src="{% versioned_static 'vendor/chart.umd.js' %}" defer></script><script src="{% versioned_static 'postal/thinking-character.js' %}" defer></script><script src="{% versioned_static 'postal/app.js' %}" defer></script>
+</head><body class="workspace-page">
+{% include 'postal/_icons.html' %}
+<a class="skip-link" href="#workspace">Ir al contenido</a>
+{{ user.pk|json_script:'user-id' }}
+{{ request.api_identity|json_script:'api-identity' }}
+{{ assistant_skills|json_script:'assistant-skills' }}
+{{ column_labels|json_script:'column-labels' }}
+{{ label_words|json_script:'label-words' }}
+<div class="app-shell">
+<button id="sidebar-backdrop" class="sidebar-backdrop" type="button" aria-label="Cerrar navegación" hidden></button>
+<aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+<div class="sidebar-brand"><a class="brand" href="/"><img src="{% versioned_static 'postal/assets/correos-bolivia.png' %}" alt="Correos de Bolivia" width="142" height="48"><span>ASISTENTE POSTAL</span></a><button id="menu-close" class="icon-button mobile-close" type="button" aria-label="Cerrar navegación">{% include 'postal/_icon.html' with name='close' %}</button></div>
+<button id="new-chat" class="button new-chat" type="button">{% include 'postal/_icon.html' with name='plus' %} Nueva conversación</button>
+<nav class="navigation" aria-label="Herramientas">
+<a class="sidebar-management" href="/trash/">{% include 'postal/_icon.html' with name='trash' %} Mi papelera</a>
+{% if user.is_superuser %}<a class="sidebar-management" href="/system/">{% include 'postal/_icon.html' with name='shield' %} Administración</a>{% endif %}
+</nav>
+<div class="history-heading"><h2>Conversaciones</h2><span id="history-count">0</span></div>
+<label class="history-search-wrap" for="history-search">{% include 'postal/_icon.html' with name='search' %}<span class="sr-only">Buscar conversaciones</span><input id="history-search" class="history-search" type="search" placeholder="Buscar en el historial…" autocomplete="off"></label>
+<div id="history-list" class="history-list"></div>
+<div class="sidebar-bottom">
+<div class="account-info"><span class="secure-icon">{% include 'postal/_icon.html' with name='shield' %}</span><div><strong>{{ user.username }}</strong><span>Mi cuenta · Historial sincronizado</span></div><span class="online-dot" aria-hidden="true"></span></div>
+<div class="sidebar-actions"><form id="logout-form" action="/accounts/logout/" method="post">{% csrf_token %}<input type="hidden" name="expected_user" value="{{ request.api_identity }}"><button class="logout" type="submit">Cerrar sesión {% include 'postal/_icon.html' with name='exit' %}</button></form><button id="theme-toggle" class="icon-button theme-toggle" type="button" aria-label="Cambiar tema">{% include 'postal/_icon.html' with name='moon' %}</button></div></div>
+</aside>
+<div class="main-shell">
+<header class="mobile-toolbar"><button id="menu-toggle" class="icon-button mobile-menu" type="button" aria-label="Abrir navegación" aria-controls="sidebar" aria-expanded="false">{% include 'postal/_icon.html' with name='menu' %}</button></header>
+<h1 id="current-view" class="sr-only">Asistente postal</h1><span id="connection-state" class="sr-only" role="status">Comprobando conexión…</span>
+<main id="workspace" tabindex="-1">
+<div id="environment-notice" class="notice" {% if data_mode != 'demo' %}hidden{% endif %}>Modo demostración · Los resultados son datos de prueba, no operaciones reales.</div>
+<div id="configuration-notice" class="notice" hidden></div><div id="storage-notice" class="notice" hidden>No se pudo sincronizar el historial con el servidor. Comprueba la conexión y vuelve a intentar; el borrador actual permanece en esta pestaña.</div>
+<noscript><p class="notice">Activa JavaScript para consultar el asistente y las herramientas postales.</p></noscript>
+<section id="view-chat" class="view chat-view">
+<div class="conversation" id="conversation" aria-label="Conversación">
+<p id="conversation-id" class="small-label" hidden></p>
+<div id="chat-welcome" class="welcome">
+{% include 'postal/_motion.html' %}
+<h2>¿Qué necesitas consultar?</h2>
+</div><div id="messages" class="messages" aria-live="polite" aria-relevant="additions"></div>
+</div>
+<div class="composer-area"><form id="chat-form" class="composer" aria-busy="true"><label for="question" class="sr-only">Tu pregunta sobre los datos postales</label><textarea id="question" rows="2" maxlength="4000" placeholder="Pregunta lo que necesitas saber…" required disabled></textarea><div class="composer-footer"><div><span class="keyboard-hint">Enter para enviar</span><button class="send" type="submit" aria-label="Consultar" disabled>{% include 'postal/_icon.html' with name='send' %}</button></div></div></form></div>
+</section>
+<section id="view-tracking" class="view tool-view" hidden>
+<div class="view-heading"><span class="tool-icon">{% include 'postal/_icon.html' with name='box' %}</span><div><h2>Rastrear envío</h2><p>Consulta los movimientos disponibles en el respaldo.</p></div></div>
+<form id="tracking-form" class="tool-form"><label for="tracking-code">Códigos de seguimiento</label><textarea id="tracking-code" rows="3" maxlength="610" autocomplete="off" placeholder="Un código por línea, o separados por comas" aria-describedby="tracking-help" required></textarea><label class="service-label" for="tracking-service">Servicio postal</label><div class="inline-form"><select id="tracking-service"><option value="">Todos los servicios</option><option value="EMS">EMS</option><option value="CERTIFICADO">Certificado</option><option value="CONTRATO">Contrato</option><option value="INTERNACIONAL">Internacional</option><option value="ORDINARIO">Ordinario</option><option value="EMS_FORMULARIO">EMS formulario</option></select><button class="button primary">Rastrear {% include 'postal/_icon.html' with name='arrow' %}</button></div><p id="tracking-help">Hasta seis códigos por consulta. Si un código pertenece a varios servicios, elige el servicio y vuelve a buscar. El último estado es histórico, no una ubicación en tiempo real.</p></form><div id="tracking-results" aria-live="polite"></div>
+</section>
+<section id="view-dashboard" class="view tool-view" hidden>
+<div class="view-heading"><span class="tool-icon">{% include 'postal/_icon.html' with name='chart' %}</span><div><h2>Estadísticas</h2><p>Distribuciones y conteos sobre los datos autorizados.</p></div></div>
+<form id="dashboard-form" class="tool-form"><label for="metric">Métrica</label><div class="inline-form"><select id="metric"><option value="envios_por_servicio">Envíos por servicio</option><option value="envios_por_estado">Envíos por estado</option><option value="evolucion_mensual">Evolución mensual</option><option value="sucursales_por_departamento">Sucursales por departamento</option></select><button class="button primary">Consultar métrica {% include 'postal/_icon.html' with name='arrow' %}</button></div></form><div id="dashboard-results" aria-live="polite"><div class="empty-state">{% include 'postal/_icon.html' with name='chart' %}<h3>Elige una métrica para comenzar</h3><p>Verás el gráfico, sus valores y las tablas de origen.</p></div></div>
+</section>
+<section id="view-catalog" class="view tool-view" hidden>
+<div class="view-heading"><span class="tool-icon">{% include 'postal/_icon.html' with name='catalog' %}</span><div><h2>Catálogo de datos</h2><p>Tablas, campos y relaciones del esquema postal.</p></div><span id="catalog-count" class="small-label"></span></div><div class="tool-form"><label for="catalog-search">Buscar tabla o campo</label><input id="catalog-search" type="search" placeholder="Nombre de tabla o campo"><p>Consulta los campos y relaciones autorizados para el asistente.</p></div><div id="catalog-list" aria-live="polite"></div>
+</section>
+</main></div></div><div id="announcement" class="toast" role="status" hidden></div>
+</body></html>

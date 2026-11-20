@@ -1,0 +1,33 @@
+<div class="network-workspace">
+<section class="network-status" aria-labelledby="network-status-title">
+  <div class="network-heading"><div><h2 id="network-status-title">Conexión guardada</h2><p>Configuración que utilizan las consultas nuevas.</p></div><span class="network-readonly">Acceso postal de solo lectura</span></div>
+  <dl class="network-facts"><div><dt>Origen activo</dt><dd>{{ database.engine }}</dd></div><div><dt>Servidor PostgreSQL</dt><dd>{{ database.host }}</dd></div><div><dt>Base postal</dt><dd>{{ database.name }}</dd></div></dl>
+  <div class="network-diagnostic"><form method="post" id="network-check">{% csrf_token %}<button type="submit" name="action" value="check_database" class="button">{% include 'postal/_icon.html' with name='shield' %} Comprobar conexión guardada</button></form><p>Verifica el origen guardado, sin aplicar los cambios del formulario.</p></div>
+  {% if diagnostic %}<p class="notice network-result" role="status" tabindex="-1">{{ diagnostic }}</p>{% else %}<p class="network-check-note">La configuración guardada no garantiza que la conexión esté disponible.</p>{% endif %}
+</section>
+<div class="network-sections">
+{% for block in network_blocks %}
+<section class="network-section network-selectable {% if network_section == block.key %}is-editing{% endif %}" aria-labelledby="network-heading-{{ block.key }}">
+<div class="network-heading"><div><h2 id="network-heading-{{ block.key }}">{{ block.title }}</h2><p>{% if network_section == block.key %}Editando esta sección. Los cambios se aplican al guardar.{% else %}Configuración guardada · Solo lectura{% endif %}</p></div>
+{% if network_section != block.key %}<a class="button" href="?view=network&amp;edit_network={{ block.key }}#network-heading-{{ block.key }}">Editar {% if block.key == 'source' %}origen postal{% elif block.key == 'ai' %}conexiones de IA{% else %}conexión PostgreSQL{% endif %}</a>{% endif %}</div>
+{% if network_section == block.key %}
+<form id="configuration" class="network-config" method="post">{% csrf_token %}<input type="hidden" name="action" value="settings"><input type="hidden" name="settings_area" value="network"><input type="hidden" name="network_section" value="{{ network_section }}">
+{% if form.errors %}<div class="notice system-errors" role="alert"><strong>No se guardaron los cambios.</strong>{{ form.non_field_errors }}{% for field in form %}{% for error in field.errors %}<p><a href="#{{ field.id_for_label }}">{{ field.label }}</a>: {{ error }}</p>{% endfor %}{% endfor %}</div>{% endif %}
+<div class="network-editor-fields">
+{% for field in form %}{% if field.name != 'clear_BUSINESS_DATABASE_URL' %}
+<div class="system-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>
+{% if field.name == 'BUSINESS_DATABASE_URL' %}<div class="network-secret">{{ field }}<button type="button" class="button" id="network-show-url" aria-controls="id_BUSINESS_DATABASE_URL" aria-pressed="false" hidden>Mostrar</button></div><small id="id_BUSINESS_DATABASE_URL_helptext">{{ field.help_text }} La URL guardada nunca se muestra.</small><label class="network-clear">{{ form.clear_BUSINESS_DATABASE_URL }} Quitar la conexión guardada al guardar</label>
+{% else %}{{ field }}{% endif %}{{ field.errors }}</div>
+{% endif %}{% endfor %}
+</div>
+{% if block.key != 'source' %}<button type="button" class="button" id="network-defaults" hidden>Restablecer tiempos</button>{% endif %}
+<div class="network-save"><div><p id="network-dirty" role="status">Sin cambios</p><small>Solo se guarda esta sección.</small></div><div class="network-save-actions"><a class="button" href="?view=network">Cancelar</a><button class="button primary" type="submit">Guardar cambios</button></div></div>
+</form>
+{% else %}
+<dl class="network-summary">{% for field, clear in block.fields %}<div><dt>{{ field.label }}</dt><dd>{% if field.name == 'DATA_MODE' %}{{ database.engine }}{% elif field.name == 'BUSINESS_DATABASE_URL' %}{% if network_url_configured %}Configurada · Credenciales ocultas{% else %}Sin configurar{% endif %}{% elif field.name == 'DB_STATEMENT_TIMEOUT' %}{% if field.value == 0 %}Sin límite{% else %}{{ field.value }} ms{% endif %}{% else %}{{ field.value }} s{% endif %}</dd></div>{% endfor %}</dl>
+{% endif %}
+</section>
+{% endfor %}
+</div>
+{{ network_defaults|json_script:'network-default-values' }}
+</div>

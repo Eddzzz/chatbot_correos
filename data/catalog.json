@@ -1,0 +1,7470 @@
+[
+  {
+    "name": "activity_logs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "action",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "module",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "details",
+        "type": "text"
+      },
+      {
+        "name": "ip_address",
+        "type": "character varying(45)"
+      },
+      {
+        "name": "user_agent",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "model",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "record_id",
+        "type": "bigint"
+      },
+      {
+        "name": "changes_json",
+        "type": "json"
+      },
+      {
+        "name": "fecha",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "vehicle_log_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "alerta_empresa_destinatarios",
+    "columns": [
+      {
+        "name": "alerta_empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "alerta_empresa_id",
+        "table": "alertas_empresa",
+        "target": "id"
+      },
+      {
+        "column": "empresa_id",
+        "table": "empresa",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "alerta_empresa_lecturas",
+    "columns": [
+      {
+        "name": "alerta_empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "leida_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "alerta_empresa_id",
+        "table": "alertas_empresa",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "alerta_empresa_usuarios",
+    "columns": [
+      {
+        "name": "alerta_empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "alerta_empresa_id",
+        "table": "alertas_empresa",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "alertas_empresa",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "titulo",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "mensaje",
+        "type": "text"
+      },
+      {
+        "name": "portada_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "pdf_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "creado_por",
+        "type": "bigint"
+      },
+      {
+        "name": "publicada_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "vence_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "aprobada_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "aprobada_por",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "aprobada_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "creado_por",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "app_settings",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "key",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "value",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "auditoria",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_evento",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bastion_carteros",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "id_paquetes_ems",
+        "type": "bigint"
+      },
+      {
+        "name": "id_paquetes_certi",
+        "type": "bigint"
+      },
+      {
+        "name": "id_estados",
+        "type": "bigint"
+      },
+      {
+        "name": "id_user",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "intento",
+        "type": "integer"
+      },
+      {
+        "name": "recibido_por",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "descripcion",
+        "type": "text"
+      },
+      {
+        "name": "id_paquetes_contrato",
+        "type": "bigint"
+      },
+      {
+        "name": "foto",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "id_paquetes_ordi",
+        "type": "bigint"
+      },
+      {
+        "name": "imagen_devolucion",
+        "type": "text"
+      },
+      {
+        "name": "id_solicitud_cliente",
+        "type": "bigint"
+      },
+      {
+        "name": "id_estado_anterior",
+        "type": "bigint"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bastion_certi",
+    "columns": [
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono",
+        "type": "integer"
+      },
+      {
+        "name": "cuidad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "zona",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ventanilla",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "tipo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "aduana",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observaciones",
+        "type": "text"
+      },
+      {
+        "name": "fk_estado",
+        "type": "bigint"
+      },
+      {
+        "name": "fk_ventanilla",
+        "type": "bigint"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "id_origen",
+        "type": "bigint"
+      },
+      {
+        "name": "id",
+        "type": "bigint"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bastion_contratos",
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "codigo_madre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "estados_id",
+        "type": "bigint"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "provincia_origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destino",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_r",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_r",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "cantidad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "direccion_r",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_d",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_d",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "direccion_d",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "mapa",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "provincia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "tarifa_contrato_id",
+        "type": "bigint"
+      },
+      {
+        "name": "fecha_recojo",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "justificacion",
+        "type": "text"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "id_origen",
+        "type": "bigint"
+      },
+      {
+        "name": "id",
+        "type": "bigint"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bastion_ems",
+    "columns": [
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tipo_correspondencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "cantidad",
+        "type": "integer"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "nombre_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_envia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "carnet",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "referencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tarifario_id",
+        "type": "bigint"
+      },
+      {
+        "name": "estado_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "justificacion",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "id_origen",
+        "type": "bigint"
+      },
+      {
+        "name": "id",
+        "type": "bigint"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bastion_ems_formulario",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "paquete_ems_id",
+        "type": "bigint"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tipo_correspondencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "cantidad",
+        "type": "integer"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "nombre_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_envia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "carnet",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destino_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tarifario_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "referencia",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bastion_eventos",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "tabla_origen",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "id_origen",
+        "type": "bigint"
+      },
+      {
+        "name": "tipo_paquete",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "evento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "cliente_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bastion_ordi",
+    "columns": [
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "zona",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "aduana",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "observaciones",
+        "type": "text"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "fk_ventanilla",
+        "type": "bigint"
+      },
+      {
+        "name": "fk_estado",
+        "type": "bigint"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "id_origen",
+        "type": "bigint"
+      },
+      {
+        "name": "pais",
+        "type": "character varying(10)"
+      },
+      {
+        "name": "iso",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "tipo",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "factura",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "manifiesto",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "id",
+        "type": "bigint"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "bitacoras",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "paquetes_ems_id",
+        "type": "bigint"
+      },
+      {
+        "name": "paquetes_contrato_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "transportadora",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "provincia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "factura",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "precio_total",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "imagen_factura",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "paquetes_ordi_id",
+        "type": "bigint"
+      },
+      {
+        "name": "paquetes_certi_id",
+        "type": "bigint"
+      },
+      {
+        "name": "qr_url",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "qr_texto",
+        "type": "text"
+      },
+      {
+        "name": "qr_datos",
+        "type": "json"
+      },
+      {
+        "name": "factura_fecha_emision",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "factura_nit_emisor",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "factura_cuf",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "factura_razon_social",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "factura_cliente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "factura_direccion",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "paquetes_certi_id",
+        "table": "paquetes_certi",
+        "target": "id"
+      },
+      {
+        "column": "paquetes_contrato_id",
+        "table": "paquetes_contrato",
+        "target": "id"
+      },
+      {
+        "column": "paquetes_ems_id",
+        "table": "paquetes_ems",
+        "target": "id"
+      },
+      {
+        "column": "paquetes_ordi_id",
+        "table": "paquetes_ordi",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "cache",
+    "columns": [
+      {
+        "name": "key",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "value",
+        "type": "text"
+      },
+      {
+        "name": "expiration",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "cache_locks",
+    "columns": [
+      {
+        "name": "key",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "owner",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "expiration",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "cartero",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "id_paquetes_ems",
+        "type": "bigint"
+      },
+      {
+        "name": "id_paquetes_certi",
+        "type": "bigint"
+      },
+      {
+        "name": "id_estados",
+        "type": "bigint"
+      },
+      {
+        "name": "id_user",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "intento",
+        "type": "integer"
+      },
+      {
+        "name": "recibido_por",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "descripcion",
+        "type": "text"
+      },
+      {
+        "name": "id_paquetes_contrato",
+        "type": "bigint"
+      },
+      {
+        "name": "foto",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "id_paquetes_ordi",
+        "type": "bigint"
+      },
+      {
+        "name": "imagen_devolucion",
+        "type": "text"
+      },
+      {
+        "name": "id_solicitud_cliente",
+        "type": "bigint"
+      },
+      {
+        "name": "id_estado_anterior",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "id_estado_anterior",
+        "table": "estados",
+        "target": "id"
+      },
+      {
+        "column": "id_estados",
+        "table": "estados",
+        "target": "id"
+      },
+      {
+        "column": "id_paquetes_certi",
+        "table": "paquetes_certi",
+        "target": "id"
+      },
+      {
+        "column": "id_paquetes_contrato",
+        "table": "paquetes_contrato",
+        "target": "id"
+      },
+      {
+        "column": "id_paquetes_ems",
+        "table": "paquetes_ems",
+        "target": "id"
+      },
+      {
+        "column": "id_paquetes_ordi",
+        "table": "paquetes_ordi",
+        "target": "id"
+      },
+      {
+        "column": "id_solicitud_cliente",
+        "table": "solicitud_clientes",
+        "target": "id"
+      },
+      {
+        "column": "id_user",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "cartero_assignment_report_items",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "cartero_assignment_report_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tipo_paquete",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "paquete_id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "cartero_assignment_report_id",
+        "table": "cartero_assignment_reports",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "cartero_assignment_reports",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "token",
+        "type": "uuid"
+      },
+      {
+        "name": "assigned_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "actor_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "regional",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "assigned_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "total_assigned",
+        "type": "integer"
+      },
+      {
+        "name": "summary_by_type",
+        "type": "json"
+      },
+      {
+        "name": "rows",
+        "type": "json"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "actor_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "assigned_user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "cartero_guias",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "guia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "transportadora",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "provincia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "factura",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "precio_total",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "peso_total",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "cashier_flow_receivable_collections",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "scope_hash",
+        "type": "character(64)"
+      },
+      {
+        "name": "servicio",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "anio",
+        "type": "smallint"
+      },
+      {
+        "name": "meses",
+        "type": "json"
+      },
+      {
+        "name": "limite",
+        "type": "smallint"
+      },
+      {
+        "name": "departamento",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "monto_cobrado",
+        "type": "numeric(16,2)"
+      },
+      {
+        "name": "cobrado_por",
+        "type": "bigint"
+      },
+      {
+        "name": "cobrado_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "cobro_activo",
+        "type": "boolean"
+      },
+      {
+        "name": "devuelto_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "devuelto_por",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "cobrado_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "devuelto_por",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "cashier_flow_receivable_movements",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "movement_key",
+        "type": "character(64)"
+      },
+      {
+        "name": "servicio",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "anio",
+        "type": "smallint"
+      },
+      {
+        "name": "mes",
+        "type": "smallint"
+      },
+      {
+        "name": "venta_id",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "detalle_id",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "codigo_orden",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "codigo_seguimiento",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "fecha",
+        "type": "character varying(80)"
+      },
+      {
+        "name": "descripcion",
+        "type": "text"
+      },
+      {
+        "name": "monto",
+        "type": "numeric(16,2)"
+      },
+      {
+        "name": "cobro_activo",
+        "type": "boolean"
+      },
+      {
+        "name": "cobrado_por",
+        "type": "bigint"
+      },
+      {
+        "name": "cobrado_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "devuelto_por",
+        "type": "bigint"
+      },
+      {
+        "name": "devuelto_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "facturado_por_id",
+        "type": "character varying(80)"
+      },
+      {
+        "name": "facturado_por_nombre",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "facturado_por_email",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "facturado_por_alias",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "cantidad_paquetes",
+        "type": "numeric(16,2)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "cobrado_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "devuelto_por",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "chasqui_location_points",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "location_id",
+        "type": "character varying(64)"
+      },
+      {
+        "name": "device_id",
+        "type": "character varying(190)"
+      },
+      {
+        "name": "device_name",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "latitude",
+        "type": "numeric(10,7)"
+      },
+      {
+        "name": "longitude",
+        "type": "numeric(10,7)"
+      },
+      {
+        "name": "accuracy_m",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "speed_kmh",
+        "type": "numeric(8,2)"
+      },
+      {
+        "name": "heading",
+        "type": "numeric(6,2)"
+      },
+      {
+        "name": "battery_percent",
+        "type": "numeric(5,2)"
+      },
+      {
+        "name": "is_moving",
+        "type": "boolean"
+      },
+      {
+        "name": "gps_enabled",
+        "type": "boolean"
+      },
+      {
+        "name": "gps_mocked",
+        "type": "boolean"
+      },
+      {
+        "name": "sent_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "received_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "is_simulated",
+        "type": "boolean"
+      },
+      {
+        "name": "route_label",
+        "type": "character varying(160)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "clientes",
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "provider",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "google_id",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "email",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "avatar",
+        "type": "text"
+      },
+      {
+        "name": "email_verified_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "password",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "rol",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "remember_token",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "codigo_cliente",
+        "type": "character varying(9)"
+      },
+      {
+        "name": "tipodocumentoidentidad",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "numero_carnet",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "razon_social",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "complemento",
+        "type": "character varying(50)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "codigo_empresa",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "barcode",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "empresa_id",
+        "table": "empresa",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "conceptos_facturacion",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "actividad_economica",
+        "type": "character varying(6)"
+      },
+      {
+        "name": "codigo_sin",
+        "type": "character varying(7)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "unidad_medida",
+        "type": "integer"
+      },
+      {
+        "name": "descripcion",
+        "type": "character varying(500)"
+      },
+      {
+        "name": "precio_base",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "conciliaciones_empresa",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "anio",
+        "type": "smallint"
+      },
+      {
+        "name": "mes",
+        "type": "smallint"
+      },
+      {
+        "name": "gestora_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "gestora_por",
+        "type": "bigint"
+      },
+      {
+        "name": "conciliacion_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "conciliacion_por",
+        "type": "bigint"
+      },
+      {
+        "name": "documento_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "documento_nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "documento_mime",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "documento_tamano",
+        "type": "bigint"
+      },
+      {
+        "name": "documento_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "documento_por",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "factura_venta_id",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "factura_detalle_id",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "factura_descripcion",
+        "type": "text"
+      },
+      {
+        "name": "factura_codigo_orden",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "factura_codigo_seguimiento",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "factura_fecha",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "factura_monto",
+        "type": "numeric(15,2)"
+      },
+      {
+        "name": "facturado_anio",
+        "type": "smallint"
+      },
+      {
+        "name": "facturado_mes",
+        "type": "smallint"
+      },
+      {
+        "name": "por_cobrar_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "por_cobrar_por",
+        "type": "bigint"
+      },
+      {
+        "name": "factura_cuf",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "factura_numero",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "factura_pdf_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "factura_razon_social",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "factura_codigo_cliente",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "factura_numero_documento",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "factura_tipo_documento",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "pago_recibido_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "pago_recibido_por",
+        "type": "bigint"
+      },
+      {
+        "name": "pago_comprobante_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "pago_comprobante_nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "pago_comprobante_tamano",
+        "type": "bigint"
+      },
+      {
+        "name": "confirmacion_pago_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "confirmacion_pago_por",
+        "type": "bigint"
+      },
+      {
+        "name": "conciliado_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "conciliado_por",
+        "type": "bigint"
+      },
+      {
+        "name": "formato_nota_cobranza",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_empresa_cobranza",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "conciliacion_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "conciliado_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "confirmacion_pago_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "documento_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "empresa_id",
+        "table": "empresa",
+        "target": "id"
+      },
+      {
+        "column": "gestora_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "pago_recibido_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "por_cobrar_por",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "correlativos_contrato",
+    "columns": [
+      {
+        "name": "codigo_cliente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ultimo_correlativo",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "despacho",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "oforigen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ofdestino",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "categoria",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "subclase",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nro_despacho",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nro_envase",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "identificador",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "anio",
+        "type": "smallint"
+      },
+      {
+        "name": "departamento",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "fk_estado",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "fk_estado",
+        "table": "estados",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "destino",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_destino",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "driver_incentive_reports",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "report_year",
+        "type": "smallint"
+      },
+      {
+        "name": "report_month",
+        "type": "smallint"
+      },
+      {
+        "name": "stars_start",
+        "type": "smallint"
+      },
+      {
+        "name": "stars_end",
+        "type": "smallint"
+      },
+      {
+        "name": "non_preventive_requests",
+        "type": "integer"
+      },
+      {
+        "name": "preventive_requests",
+        "type": "integer"
+      },
+      {
+        "name": "generated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "discountable_events",
+        "type": "integer"
+      }
+    ],
+    "relations": [
+      {
+        "column": "driver_id",
+        "table": "drivers",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "drivers",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "licencia",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "tipo_licencia",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "fecha_vencimiento_licencia",
+        "type": "date"
+      },
+      {
+        "name": "telefono",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "email",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "memorandum_path",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "empresa",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "sigla",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "codigo_cliente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "clasificacion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "documentacion_legal",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "inicio_contrato",
+        "type": "date"
+      },
+      {
+        "name": "fin_contrato",
+        "type": "date"
+      },
+      {
+        "name": "cobertura",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "presupuesto",
+        "type": "numeric(14,2)"
+      },
+      {
+        "name": "documento_pdf_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nit",
+        "type": "character varying(32)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "empresa_historiales",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "archivado_por",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "sigla",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "codigo_cliente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "clasificacion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "documentacion_legal",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "inicio_contrato",
+        "type": "date"
+      },
+      {
+        "name": "fin_contrato",
+        "type": "date"
+      },
+      {
+        "name": "cobertura",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "presupuesto",
+        "type": "numeric(15,2)"
+      },
+      {
+        "name": "documento_pdf_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "datos_completos",
+        "type": "json"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "nit",
+        "type": "character varying(32)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "archivado_por",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "empresa_id",
+        "table": "empresa",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "entregas",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "estados",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_estado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "eventos",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_evento",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "eventos_auditoria",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "auditoria_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "auditoria_id",
+        "table": "auditoria",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "eventos_certi",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "evento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "codigo_relacionado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "detalle_evento",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "evento_id",
+        "table": "eventos",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "eventos_contrato",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "evento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "codigo_relacionado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "detalle_evento",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "evento_id",
+        "table": "eventos",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "eventos_despacho",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "evento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "evento_id",
+        "table": "eventos",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "eventos_ems",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "evento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "codigo_relacionado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "detalle_evento",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "evento_id",
+        "table": "eventos",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "eventos_ordi",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "evento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "codigo_relacionado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "detalle_evento",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "evento_id",
+        "table": "eventos",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "eventos_tiktoker",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "evento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "cliente_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "detalle_evento",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "cliente_id",
+        "table": "clientes",
+        "target": "id"
+      },
+      {
+        "column": "evento_id",
+        "table": "eventos",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "external_api_tokens",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "jti",
+        "type": "character varying(64)"
+      },
+      {
+        "name": "token_hash",
+        "type": "character varying(64)"
+      },
+      {
+        "name": "abilities",
+        "type": "json"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean"
+      },
+      {
+        "name": "last_used_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "expires_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "revoked_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "token_encrypted",
+        "type": "text"
+      },
+      {
+        "name": "token_plain",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "factura_ticket_snapshots",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "cart_id",
+        "type": "bigint"
+      },
+      {
+        "name": "data",
+        "type": "json"
+      },
+      {
+        "name": "captured_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "facturacion_clientes_frecuentes",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "tipo_documento",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "numero_documento",
+        "type": "character varying(80)"
+      },
+      {
+        "name": "complemento_documento",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "razon_social",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "correo_facturacion",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "ultima_venta_id",
+        "type": "bigint"
+      },
+      {
+        "name": "usos",
+        "type": "integer"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "facturas",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "failed_jobs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "uuid",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "connection",
+        "type": "text"
+      },
+      {
+        "name": "queue",
+        "type": "text"
+      },
+      {
+        "name": "payload",
+        "type": "text"
+      },
+      {
+        "name": "exception",
+        "type": "text"
+      },
+      {
+        "name": "failed_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "fuel_antifraud_cases",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "case_key",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "type",
+        "type": "character varying(60)"
+      },
+      {
+        "name": "status",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "invoice_number",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "fuel_invoice_id",
+        "type": "bigint"
+      },
+      {
+        "name": "conflicting_fuel_invoice_id",
+        "type": "bigint"
+      },
+      {
+        "name": "fuel_log_id",
+        "type": "bigint"
+      },
+      {
+        "name": "conflicting_fuel_log_id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "conflicting_vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "conflicting_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "detected_source",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "summary",
+        "type": "text"
+      },
+      {
+        "name": "evidence_json",
+        "type": "json"
+      },
+      {
+        "name": "reviewed_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "reviewed_by_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "conflicting_driver_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "conflicting_fuel_invoice_id",
+        "table": "fuel_invoices",
+        "target": "id"
+      },
+      {
+        "column": "conflicting_vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      },
+      {
+        "column": "driver_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "fuel_invoice_id",
+        "table": "fuel_invoices",
+        "target": "id"
+      },
+      {
+        "column": "reviewed_by_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "fuel_invoice_details",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "fuel_invoice_id",
+        "type": "bigint"
+      },
+      {
+        "name": "fuel_log_id",
+        "type": "bigint"
+      },
+      {
+        "name": "monto",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "detalle",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "gas_station_id",
+        "type": "bigint"
+      },
+      {
+        "name": "cantidad",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "precio_unitario",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "subtotal",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "estado",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      }
+    ],
+    "relations": [
+      {
+        "column": "fuel_invoice_id",
+        "table": "fuel_invoices",
+        "target": "id"
+      },
+      {
+        "column": "fuel_log_id",
+        "table": "fuel_logs",
+        "target": "id"
+      },
+      {
+        "column": "gas_station_id",
+        "table": "gas_stations",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "fuel_invoices",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "numero",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "fecha_emision",
+        "type": "date"
+      },
+      {
+        "name": "gas_station_id",
+        "type": "bigint"
+      },
+      {
+        "name": "monto_total",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "numero_factura",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_cliente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "siat_source_url",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "siat_snapshot_json",
+        "type": "json"
+      },
+      {
+        "name": "siat_document_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "invoice_photo_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "siat_rollo_document_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "fuel_latitude",
+        "type": "numeric(10,7)"
+      },
+      {
+        "name": "fuel_longitude",
+        "type": "numeric(10,7)"
+      },
+      {
+        "name": "fuel_location_label",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "fuel_recorded_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "antifraud_payload_json",
+        "type": "json"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      }
+    ],
+    "relations": [
+      {
+        "column": "gas_station_id",
+        "table": "gas_stations",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "fuel_logs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "fecha",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "galones",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "precio_galon",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "total_calculado",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "kilometraje",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "recibo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observaciones",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "gas_stations",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ubicacion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "provincia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "email",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "latitud",
+        "type": "numeric(10,8)"
+      },
+      {
+        "name": "longitud",
+        "type": "numeric(11,8)"
+      },
+      {
+        "name": "activa",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "nit_emisor",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "razon_social",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "job_batches",
+    "columns": [
+      {
+        "name": "id",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "total_jobs",
+        "type": "integer"
+      },
+      {
+        "name": "pending_jobs",
+        "type": "integer"
+      },
+      {
+        "name": "failed_jobs",
+        "type": "integer"
+      },
+      {
+        "name": "failed_job_ids",
+        "type": "text"
+      },
+      {
+        "name": "options",
+        "type": "text"
+      },
+      {
+        "name": "cancelled_at",
+        "type": "integer"
+      },
+      {
+        "name": "created_at",
+        "type": "integer"
+      },
+      {
+        "name": "finished_at",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "jobs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "queue",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "payload",
+        "type": "text"
+      },
+      {
+        "name": "attempts",
+        "type": "smallint"
+      },
+      {
+        "name": "reserved_at",
+        "type": "integer"
+      },
+      {
+        "name": "available_at",
+        "type": "integer"
+      },
+      {
+        "name": "created_at",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "jornadas_bitacoras",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "maintenance_alert_user_reads",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "maintenance_alert_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "read_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "maintenance_alert_id",
+        "table": "maintenance_alerts",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "maintenance_alerts",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "maintenance_type_id",
+        "type": "bigint"
+      },
+      {
+        "name": "maintenance_appointment_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tipo",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "mensaje",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "leida",
+        "type": "boolean"
+      },
+      {
+        "name": "status",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "fecha_resolucion",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "usuario_id",
+        "type": "bigint"
+      },
+      {
+        "name": "kilometraje_actual",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "kilometraje_objetivo",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "faltante_km",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "postponed_until",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "postponed_once",
+        "type": "boolean"
+      }
+    ],
+    "relations": [
+      {
+        "column": "maintenance_appointment_id",
+        "table": "maintenance_appointments",
+        "target": "id"
+      },
+      {
+        "column": "maintenance_type_id",
+        "table": "maintenance_types",
+        "target": "id"
+      },
+      {
+        "column": "usuario_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "maintenance_appointments",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tipo_mantenimiento_id",
+        "type": "bigint"
+      },
+      {
+        "name": "fecha_programada",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "es_accidente",
+        "type": "boolean"
+      },
+      {
+        "name": "estado",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "approved_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "approved_by_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "requested_by_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "solicitud_fecha",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "origen_solicitud",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "evidencia_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "formulario_documento_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      }
+    ],
+    "relations": [
+      {
+        "column": "approved_by_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "driver_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "requested_by_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "tipo_mantenimiento_id",
+        "table": "maintenance_types",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "maintenance_logs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tipo",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "fecha",
+        "type": "date"
+      },
+      {
+        "name": "proxima_fecha",
+        "type": "date"
+      },
+      {
+        "name": "costo",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "kilometraje",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "taller",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "descripcion",
+        "type": "text"
+      },
+      {
+        "name": "comprobante",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observaciones",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "maintenance_type_id",
+        "type": "bigint"
+      },
+      {
+        "name": "proximo_kilometraje",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      }
+    ],
+    "relations": [
+      {
+        "column": "maintenance_type_id",
+        "table": "maintenance_types",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "maintenance_type_vehicle",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "maintenance_type_id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "maintenance_type_id",
+        "table": "maintenance_types",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "maintenance_types",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_class_id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "cada_km",
+        "type": "integer"
+      },
+      {
+        "name": "intervalo_km",
+        "type": "integer"
+      },
+      {
+        "name": "intervalo_km_init",
+        "type": "integer"
+      },
+      {
+        "name": "intervalo_km_fh",
+        "type": "integer"
+      },
+      {
+        "name": "km_alerta_previa",
+        "type": "integer"
+      },
+      {
+        "name": "descripcion",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "es_preventivo",
+        "type": "boolean"
+      },
+      {
+        "name": "maintenance_form_type",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "categoria",
+        "type": "character varying(40)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "malencaminados",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "malencaminamiento",
+        "type": "integer"
+      },
+      {
+        "name": "paquetes_ems_id",
+        "type": "bigint"
+      },
+      {
+        "name": "paquetes_contrato_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destino_anterior",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destino_nuevo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "departamento_origen",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "paquetes_certi_id",
+        "type": "bigint"
+      },
+      {
+        "name": "paquetes_ordi_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "paquetes_certi_id",
+        "table": "paquetes_certi",
+        "target": "id"
+      },
+      {
+        "column": "paquetes_contrato_id",
+        "table": "paquetes_contrato",
+        "target": "id"
+      },
+      {
+        "column": "paquetes_ems_id",
+        "table": "paquetes_ems",
+        "target": "id"
+      },
+      {
+        "column": "paquetes_ordi_id",
+        "table": "paquetes_ordi",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "migrations",
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "migration",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "batch",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "mobile_db_snapshots",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "snapshot_key",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "sent_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "action",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "model",
+        "type": "character varying(190)"
+      },
+      {
+        "name": "table_name",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "record_id",
+        "type": "bigint"
+      },
+      {
+        "name": "page",
+        "type": "integer"
+      },
+      {
+        "name": "total_pages",
+        "type": "integer"
+      },
+      {
+        "name": "payload_json",
+        "type": "text"
+      },
+      {
+        "name": "payload_size",
+        "type": "integer"
+      },
+      {
+        "name": "ip_address",
+        "type": "character varying(45)"
+      },
+      {
+        "name": "user_agent",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "model_has_permissions",
+    "columns": [
+      {
+        "name": "permission_id",
+        "type": "bigint"
+      },
+      {
+        "name": "model_type",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "model_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "permission_id",
+        "table": "permissions",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "model_has_roles",
+    "columns": [
+      {
+        "name": "role_id",
+        "type": "bigint"
+      },
+      {
+        "name": "model_type",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "model_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "role_id",
+        "table": "roles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "origen",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "paquetes_certi",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono",
+        "type": "integer"
+      },
+      {
+        "name": "cuidad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "zona",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ventanilla",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "tipo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "aduana",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "fk_estado",
+        "type": "bigint"
+      },
+      {
+        "name": "fk_ventanilla",
+        "type": "bigint"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "observaciones",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "fk_estado",
+        "table": "estados",
+        "target": "id"
+      },
+      {
+        "column": "fk_ventanilla",
+        "table": "ventanilla",
+        "target": "id"
+      },
+      {
+        "column": "servicio_id",
+        "table": "servicio",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "paquetes_contrato",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destino",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_r",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_r",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "direccion_r",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_d",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_d",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "direccion_d",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "mapa",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "provincia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "fecha_recojo",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "justificacion",
+        "type": "text"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "estados_id",
+        "type": "bigint"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "tarifa_contrato_id",
+        "type": "bigint"
+      },
+      {
+        "name": "cantidad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "codigo_madre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "provincia_origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destino_registrado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "envio_cn33",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "empresa_id",
+        "table": "empresa",
+        "target": "id"
+      },
+      {
+        "column": "estados_id",
+        "table": "estados",
+        "target": "id"
+      },
+      {
+        "column": "tarifa_contrato_id",
+        "table": "tarifa_contrato",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "paquetes_ems",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tipo_correspondencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "cantidad",
+        "type": "integer"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "nombre_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_envia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "carnet",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tarifario_id",
+        "type": "bigint"
+      },
+      {
+        "name": "servicio_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "estado_id",
+        "type": "bigint"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "referencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "justificacion",
+        "type": "text"
+      },
+      {
+        "name": "envio_cn33",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "correo_electronico",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "estado_id",
+        "table": "estados",
+        "target": "id"
+      },
+      {
+        "column": "tarifario_id",
+        "table": "tarifario",
+        "target": "id"
+      },
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "paquetes_ems_formulario",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "paquete_ems_id",
+        "type": "bigint"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tipo_correspondencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "cantidad",
+        "type": "integer"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "nombre_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_envia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "carnet",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destino_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tarifario_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "referencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "correo_electronico",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "paquete_ems_id",
+        "table": "paquetes_ems",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "paquetes_int",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "destino",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "enviado_admision_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "estado_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tramo",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "envio_cn33",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "paquetes_ordi",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "zona",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "aduana",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "observaciones",
+        "type": "text"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "fk_ventanilla",
+        "type": "bigint"
+      },
+      {
+        "name": "fk_estado",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "pais",
+        "type": "character varying(10)"
+      },
+      {
+        "name": "iso",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "tipo",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "factura",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "manifiesto",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "fk_estado",
+        "table": "estados",
+        "target": "id"
+      },
+      {
+        "column": "fk_ventanilla",
+        "table": "ventanilla",
+        "target": "id"
+      },
+      {
+        "column": "servicio_id",
+        "table": "servicio",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "password_reset_tokens",
+    "columns": [
+      {
+        "name": "email",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "token",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "permissions",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "guard_name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "personal_access_tokens",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "tokenable_type",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tokenable_id",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "text"
+      },
+      {
+        "name": "token",
+        "type": "character varying(64)"
+      },
+      {
+        "name": "abilities",
+        "type": "text"
+      },
+      {
+        "name": "last_used_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "expires_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "peso",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "peso_inicial",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "peso_final",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "plantillas",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad_destino",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "estado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "preregistros",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "estado",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tipo_correspondencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "cantidad",
+        "type": "integer"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "nombre_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_envia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "carnet",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destino_id",
+        "type": "bigint"
+      },
+      {
+        "name": "validado_por",
+        "type": "bigint"
+      },
+      {
+        "name": "validado_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "paquete_ems_id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo_generado",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "codigo_preregistro",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "correo_electronico",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "referencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      }
+    ],
+    "relations": [
+      {
+        "column": "destino_id",
+        "table": "destino",
+        "target": "id"
+      },
+      {
+        "column": "paquete_ems_id",
+        "table": "paquetes_ems",
+        "target": "id"
+      },
+      {
+        "column": "servicio_id",
+        "table": "servicio",
+        "target": "id"
+      },
+      {
+        "column": "validado_por",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "pulse_aggregates",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "bucket",
+        "type": "integer"
+      },
+      {
+        "name": "period",
+        "type": "integer"
+      },
+      {
+        "name": "type",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "key",
+        "type": "text"
+      },
+      {
+        "name": "key_hash",
+        "type": "uuid"
+      },
+      {
+        "name": "aggregate",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "value",
+        "type": "numeric(20,2)"
+      },
+      {
+        "name": "count",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "pulse_entries",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "timestamp",
+        "type": "integer"
+      },
+      {
+        "name": "type",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "key",
+        "type": "text"
+      },
+      {
+        "name": "key_hash",
+        "type": "uuid"
+      },
+      {
+        "name": "value",
+        "type": "bigint"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "pulse_values",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "timestamp",
+        "type": "integer"
+      },
+      {
+        "name": "type",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "key",
+        "type": "text"
+      },
+      {
+        "name": "key_hash",
+        "type": "uuid"
+      },
+      {
+        "name": "value",
+        "type": "text"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "recorridos",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "remitentes_ems",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_remitente",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "carnet",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "nombre_envia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "role_has_permissions",
+    "columns": [
+      {
+        "name": "permission_id",
+        "type": "bigint"
+      },
+      {
+        "name": "role_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "permission_id",
+        "table": "permissions",
+        "target": "id"
+      },
+      {
+        "column": "role_id",
+        "table": "roles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "roles",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "guard_name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "saca",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nro_saca",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "identificador",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "paquetes",
+        "type": "integer"
+      },
+      {
+        "name": "busqueda",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "receptaculo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "fk_despacho",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "fk_estado",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "fk_despacho",
+        "table": "despacho",
+        "target": "id"
+      },
+      {
+        "column": "fk_estado",
+        "table": "estados",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "servicio",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_servicio",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "actividadEconomica",
+        "type": "character varying(6)"
+      },
+      {
+        "name": "codigoSin",
+        "type": "character varying(7)"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "descripcion",
+        "type": "character varying(500)"
+      },
+      {
+        "name": "unidadMedida",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "servicio_extras",
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "descripcion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "sessions",
+    "columns": [
+      {
+        "name": "id",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "ip_address",
+        "type": "character varying(45)"
+      },
+      {
+        "name": "user_agent",
+        "type": "text"
+      },
+      {
+        "name": "payload",
+        "type": "text"
+      },
+      {
+        "name": "last_activity",
+        "type": "integer"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "solicitud_clientes",
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "cliente_id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo_solicitud",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "tipo_correspondencia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "contenido",
+        "type": "text"
+      },
+      {
+        "name": "cantidad",
+        "type": "integer"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,3)"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "nombre_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_envia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "carnet",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_remitente",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "nombre_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "telefono_destinatario",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destino_id",
+        "type": "bigint"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "tarifario_tiktoker_id",
+        "type": "bigint"
+      },
+      {
+        "name": "servicio_extra_id",
+        "type": "bigint"
+      },
+      {
+        "name": "direccion_recojo",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "barcode",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "estado_id",
+        "type": "bigint"
+      },
+      {
+        "name": "pago_destinatario",
+        "type": "boolean"
+      },
+      {
+        "name": "cod_especial",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "recepcionado_por",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "imagen",
+        "type": "text"
+      },
+      {
+        "name": "justificacion",
+        "type": "text"
+      },
+      {
+        "name": "envio_cn33",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "paquete_muy_grande",
+        "type": "boolean"
+      }
+    ],
+    "relations": [
+      {
+        "column": "cliente_id",
+        "table": "clientes",
+        "target": "id"
+      },
+      {
+        "column": "destino_id",
+        "table": "destino",
+        "target": "id"
+      },
+      {
+        "column": "estado_id",
+        "table": "estados",
+        "target": "id"
+      },
+      {
+        "column": "servicio_extra_id",
+        "table": "servicio_extras",
+        "target": "id"
+      },
+      {
+        "column": "servicio_id",
+        "table": "servicio",
+        "target": "id"
+      },
+      {
+        "column": "tarifario_tiktoker_id",
+        "table": "tarifario_tiktoker",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "subscriptions",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character varying(64)"
+      },
+      {
+        "name": "fcm_token",
+        "type": "character varying(512)"
+      },
+      {
+        "name": "package_name",
+        "type": "character varying(256)"
+      },
+      {
+        "name": "active",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "sucursales",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigoSucursal",
+        "type": "integer"
+      },
+      {
+        "name": "puntoVenta",
+        "type": "integer"
+      },
+      {
+        "name": "municipio",
+        "type": "character varying(25)"
+      },
+      {
+        "name": "departamento",
+        "type": "character varying(15)"
+      },
+      {
+        "name": "telefono",
+        "type": "character varying(8)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "system_audit_logs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "occurred_at",
+        "type": "timestamp(0) with time zone"
+      },
+      {
+        "name": "table_name",
+        "type": "character varying(190)"
+      },
+      {
+        "name": "operation",
+        "type": "character varying(12)"
+      },
+      {
+        "name": "record_identifier",
+        "type": "text"
+      },
+      {
+        "name": "request_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "request_user_name",
+        "type": "text"
+      },
+      {
+        "name": "request_user_alias",
+        "type": "text"
+      },
+      {
+        "name": "request_ip",
+        "type": "character varying(45)"
+      },
+      {
+        "name": "user_agent",
+        "type": "text"
+      },
+      {
+        "name": "database_user",
+        "type": "character varying(190)"
+      },
+      {
+        "name": "database_session_user",
+        "type": "character varying(190)"
+      },
+      {
+        "name": "database_client_ip",
+        "type": "character varying(64)"
+      },
+      {
+        "name": "application_name",
+        "type": "text"
+      },
+      {
+        "name": "database_pid",
+        "type": "integer"
+      },
+      {
+        "name": "changed_fields",
+        "type": "jsonb"
+      },
+      {
+        "name": "old_values",
+        "type": "jsonb"
+      },
+      {
+        "name": "new_values",
+        "type": "jsonb"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "tarifa_contrato",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "destino",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "servicio",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "kilo",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "kilo_extra",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "provincia",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "retencion",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "horas_entrega",
+        "type": "integer"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "direccion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "zona",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "peso",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "provincia_origen",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "empresa_id",
+        "table": "empresa",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "tarifario",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "servicio_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destino_id",
+        "type": "bigint"
+      },
+      {
+        "name": "peso_id",
+        "type": "bigint"
+      },
+      {
+        "name": "origen_id",
+        "type": "bigint"
+      },
+      {
+        "name": "precio",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "observacion",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "destino_id",
+        "table": "destino",
+        "target": "id"
+      },
+      {
+        "column": "origen_id",
+        "table": "origen",
+        "target": "id"
+      },
+      {
+        "column": "peso_id",
+        "table": "peso",
+        "target": "id"
+      },
+      {
+        "column": "servicio_id",
+        "table": "servicio",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "tarifario_tiktoker",
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "origen_id",
+        "type": "bigint"
+      },
+      {
+        "name": "destino_id",
+        "type": "bigint"
+      },
+      {
+        "name": "peso1",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "peso2",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "peso3",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "peso_extra",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "tiempo_entrega",
+        "type": "integer"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "servicio_extra_id",
+        "type": "bigint"
+      }
+    ],
+    "relations": [
+      {
+        "column": "destino_id",
+        "table": "destino",
+        "target": "id"
+      },
+      {
+        "column": "origen_id",
+        "table": "origen",
+        "target": "id"
+      },
+      {
+        "column": "servicio_extra_id",
+        "table": "servicio_extras",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "telescope_entries",
+    "columns": [
+      {
+        "name": "sequence",
+        "type": "bigint"
+      },
+      {
+        "name": "uuid",
+        "type": "uuid"
+      },
+      {
+        "name": "batch_id",
+        "type": "uuid"
+      },
+      {
+        "name": "family_hash",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "should_display_on_index",
+        "type": "boolean"
+      },
+      {
+        "name": "type",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "content",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "telescope_entries_tags",
+    "columns": [
+      {
+        "name": "entry_uuid",
+        "type": "uuid"
+      },
+      {
+        "name": "tag",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "entry_uuid",
+        "table": "telescope_entries",
+        "target": "uuid"
+      }
+    ]
+  },
+  {
+    "name": "telescope_monitoring",
+    "columns": [
+      {
+        "name": "tag",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "tracking_local_event_rules",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "source_table",
+        "type": "character varying(80)"
+      },
+      {
+        "name": "event_id",
+        "type": "bigint"
+      },
+      {
+        "name": "raw_name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "display_name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "is_visible",
+        "type": "boolean"
+      },
+      {
+        "name": "sort_order",
+        "type": "integer"
+      },
+      {
+        "name": "notes",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "tracking_subscriptions",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo",
+        "type": "character(13)"
+      },
+      {
+        "name": "fcm_token",
+        "type": "text"
+      },
+      {
+        "name": "package_name",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "last_sig",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "user_ips_links",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "ips_user_pid",
+        "type": "smallint"
+      },
+      {
+        "name": "ips_user_domain",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "ips_user_fid",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ips_user_name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ips_office_cd",
+        "type": "smallint"
+      },
+      {
+        "name": "ips_office_fcd",
+        "type": "character varying(25)"
+      },
+      {
+        "name": "ips_office_name",
+        "type": "character varying(64)"
+      },
+      {
+        "name": "ipsweb",
+        "type": "boolean"
+      },
+      {
+        "name": "restrict_user_offices",
+        "type": "boolean"
+      },
+      {
+        "name": "active",
+        "type": "boolean"
+      },
+      {
+        "name": "last_verified_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "last_snapshot",
+        "type": "json"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "user_login_logs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "user_name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "user_alias",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ip_address",
+        "type": "character varying(45)"
+      },
+      {
+        "name": "user_agent",
+        "type": "text"
+      },
+      {
+        "name": "session_id",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "logged_in_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "logged_out_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "users",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "email",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "email_verified_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "password",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ciudad",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "ci",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "remember_token",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "empresa_id",
+        "type": "bigint"
+      },
+      {
+        "name": "alias",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "role_id",
+        "type": "bigint"
+      },
+      {
+        "name": "sucursal_id",
+        "type": "bigint"
+      },
+      {
+        "name": "regionales",
+        "type": "json"
+      },
+      {
+        "name": "auto_baja_empresa_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "provincia_origen",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "empresa_id",
+        "table": "empresa",
+        "target": "id"
+      },
+      {
+        "column": "role_id",
+        "table": "roles",
+        "target": "id"
+      },
+      {
+        "column": "sucursal_id",
+        "table": "sucursales",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "vehicle_assignments",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "tipo_asignacion",
+        "type": "character varying(100)"
+      },
+      {
+        "name": "fecha_inicio",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "fecha_fin",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "driver_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "vehicle_brands",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "pais_origen",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "vehicle_classes",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "marca_id",
+        "type": "bigint"
+      },
+      {
+        "name": "modelo",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "anio",
+        "type": "integer"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "maintenance_form_type",
+        "type": "character varying(20)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "vehicle_log",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "drivers_id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicles_id",
+        "type": "bigint"
+      },
+      {
+        "name": "fuel_log_id",
+        "type": "bigint"
+      },
+      {
+        "name": "fecha",
+        "type": "date"
+      },
+      {
+        "name": "kilometraje_salida",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "kilometraje_llegada",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "recorrido_inicio",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "recorrido_destino",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "abastecimiento_combustible",
+        "type": "boolean"
+      },
+      {
+        "name": "firma_digital",
+        "type": "text"
+      },
+      {
+        "name": "ruta_json",
+        "type": "json"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "latitud_inicio",
+        "type": "numeric(11,8)"
+      },
+      {
+        "name": "logitud_inicio",
+        "type": "numeric(11,8)"
+      },
+      {
+        "name": "latitud_destino",
+        "type": "numeric(11,8)"
+      },
+      {
+        "name": "logitud_destino",
+        "type": "numeric(11,8)"
+      },
+      {
+        "name": "kilometraje_recorrido",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "odometro_photo_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "session_reference",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "responsible_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "current_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "cantidad_paquetes",
+        "type": "integer"
+      }
+    ],
+    "relations": [
+      {
+        "column": "drivers_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "fuel_log_id",
+        "table": "fuel_invoice_details",
+        "target": "id"
+      },
+      {
+        "column": "vehicles_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "vehicle_log_investigation_tickets",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "ticket_code",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "session_reference",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "responsible_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "current_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "related_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "reason_type",
+        "type": "character varying(60)"
+      },
+      {
+        "name": "status",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "message",
+        "type": "text"
+      },
+      {
+        "name": "packages_total",
+        "type": "integer"
+      },
+      {
+        "name": "packages_open",
+        "type": "integer"
+      },
+      {
+        "name": "packages_delivered",
+        "type": "integer"
+      },
+      {
+        "name": "meta_json",
+        "type": "json"
+      },
+      {
+        "name": "opened_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "closed_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": [
+      {
+        "column": "current_driver_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "related_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "responsible_driver_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "vehicle_log_sessions",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "session_reference",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "responsible_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "current_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "origin_vehicle_log_id",
+        "type": "bigint"
+      },
+      {
+        "name": "started_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "last_reassigned_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "ended_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "status",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "meta_json",
+        "type": "json"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "vehicle_log_stage_events",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_log_session_id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_log_id",
+        "type": "bigint"
+      },
+      {
+        "name": "session_reference",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "responsible_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "acting_driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "stage_name",
+        "type": "character varying(60)"
+      },
+      {
+        "name": "event_kind",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "address",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "latitude",
+        "type": "numeric(10,7)"
+      },
+      {
+        "name": "longitude",
+        "type": "numeric(11,7)"
+      },
+      {
+        "name": "event_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "photo_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "notes",
+        "type": "text"
+      },
+      {
+        "name": "payload_json",
+        "type": "json"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "vehicle_operation_alerts",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_log_session_id",
+        "type": "bigint"
+      },
+      {
+        "name": "alert_type",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "severity",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "status",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "title",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "message",
+        "type": "text"
+      },
+      {
+        "name": "current_stage",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "last_heartbeat_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "detected_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "resolved_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "meta_json",
+        "type": "json"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "vehicles",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "placa",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "marca",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "modelo",
+        "type": "character varying(50)"
+      },
+      {
+        "name": "tipo_combustible",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "color",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "anio",
+        "type": "integer"
+      },
+      {
+        "name": "capacidad_tanque",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "marca_id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_class_id",
+        "type": "bigint"
+      },
+      {
+        "name": "kilometraje",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "kilometraje_inicial",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "kilometraje_actual",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "operational_status",
+        "type": "character varying(30)"
+      },
+      {
+        "name": "tacometro_danado",
+        "type": "boolean"
+      },
+      {
+        "name": "maintenance_form_type",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "chasis",
+        "type": "character varying(80)"
+      },
+      {
+        "name": "motor",
+        "type": "character varying(80)"
+      },
+      {
+        "name": "kilometraje_inicial_photo_path",
+        "type": "character varying(255)"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "ventanilla",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_ventanilla",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "window_load_metrics",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "route_name",
+        "type": "character varying(190)"
+      },
+      {
+        "name": "window_name",
+        "type": "character varying(180)"
+      },
+      {
+        "name": "load_time_ms",
+        "type": "integer"
+      },
+      {
+        "name": "server_time_ms",
+        "type": "integer"
+      },
+      {
+        "name": "measured_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "workshop_catalogs",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "tipo",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "celular",
+        "type": "character varying(30)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "user_id",
+        "table": "users",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "workshop_part_changes",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "workshop_id",
+        "type": "bigint"
+      },
+      {
+        "name": "codigo_pieza_nueva",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "codigo_pieza_antigua",
+        "type": "character varying(120)"
+      },
+      {
+        "name": "descripcion",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "costo",
+        "type": "numeric(12,2)"
+      }
+    ],
+    "relations": [
+      {
+        "column": "workshop_id",
+        "table": "workshops",
+        "target": "id"
+      }
+    ]
+  },
+  {
+    "name": "workshops",
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint"
+      },
+      {
+        "name": "driver_id",
+        "type": "bigint"
+      },
+      {
+        "name": "maintenance_appointment_id",
+        "type": "bigint"
+      },
+      {
+        "name": "maintenance_log_id",
+        "type": "bigint"
+      },
+      {
+        "name": "nombre_taller",
+        "type": "character varying(150)"
+      },
+      {
+        "name": "fecha_ingreso",
+        "type": "date"
+      },
+      {
+        "name": "fecha_salida",
+        "type": "date"
+      },
+      {
+        "name": "estado",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "pre_entrada_estado",
+        "type": "text"
+      },
+      {
+        "name": "diagnostico",
+        "type": "text"
+      },
+      {
+        "name": "observaciones",
+        "type": "text"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "workshop_catalog_id",
+        "type": "bigint"
+      },
+      {
+        "name": "maintenance_alert_id",
+        "type": "bigint"
+      },
+      {
+        "name": "order_number",
+        "type": "character varying(40)"
+      },
+      {
+        "name": "fecha_prometida_entrega",
+        "type": "date"
+      },
+      {
+        "name": "fecha_listo",
+        "type": "date"
+      },
+      {
+        "name": "observaciones_tecnicas",
+        "type": "text"
+      },
+      {
+        "name": "workflow_kind",
+        "type": "character varying(20)"
+      },
+      {
+        "name": "approval_required",
+        "type": "boolean"
+      },
+      {
+        "name": "fixed_catalog_cost",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "labor_cost",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "additional_cost",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "total_cost",
+        "type": "numeric(10,2)"
+      },
+      {
+        "name": "diagnosis_requested_at",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "fecha_aprobacion",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "fecha_cierre",
+        "type": "timestamp(0) without time zone"
+      },
+      {
+        "name": "dispatched_by_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "diagnosed_by_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "approved_by_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "closed_by_user_id",
+        "type": "bigint"
+      },
+      {
+        "name": "reassigned_from_workshop_catalog_id",
+        "type": "bigint"
+      },
+      {
+        "name": "rejection_reason",
+        "type": "text"
+      },
+      {
+        "name": "cancellation_reason",
+        "type": "text"
+      },
+      {
+        "name": "reception_photo_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "damage_photo_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "invoice_file_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "receipt_file_path",
+        "type": "character varying(255)"
+      },
+      {
+        "name": "activo",
+        "type": "boolean"
+      }
+    ],
+    "relations": [
+      {
+        "column": "approved_by_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "closed_by_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "diagnosed_by_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "dispatched_by_user_id",
+        "table": "users",
+        "target": "id"
+      },
+      {
+        "column": "driver_id",
+        "table": "drivers",
+        "target": "id"
+      },
+      {
+        "column": "maintenance_alert_id",
+        "table": "maintenance_alerts",
+        "target": "id"
+      },
+      {
+        "column": "maintenance_appointment_id",
+        "table": "maintenance_appointments",
+        "target": "id"
+      },
+      {
+        "column": "maintenance_log_id",
+        "table": "maintenance_logs",
+        "target": "id"
+      },
+      {
+        "column": "reassigned_from_workshop_catalog_id",
+        "table": "workshop_catalogs",
+        "target": "id"
+      },
+      {
+        "column": "vehicle_id",
+        "table": "vehicles",
+        "target": "id"
+      },
+      {
+        "column": "workshop_catalog_id",
+        "table": "workshop_catalogs",
+        "target": "id"
+      }
+    ]
+  }
+]

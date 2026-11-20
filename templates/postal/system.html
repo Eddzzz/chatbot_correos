@@ -1,0 +1,18 @@
+{% extends 'postal/system_base.html' %}
+{% block system_header %}
+<h1 id="system-view-title">{{ view_title }}</h1>
+{% if active_view != 'overview' %}<p>{% if active_view == 'manage' %}Accesos, inteligencia artificial e infraestructura del asistente.{% elif active_view == 'users' %}Cuentas, roles y acceso de los usuarios de Bolipost.{% elif active_view == 'models' %}Proveedor principal, modelos y credenciales del asistente.{% elif active_view == 'tables' %}Tablas disponibles para el asistente y control de acceso a sus datos.{% elif active_view == 'network' %}Conexiones del servidor y origen postal de solo lectura.{% elif active_view == 'agents' %}Planificación, análisis y presupuesto de respuesta.{% elif active_view == 'skills' %}Capacidades e instrucciones reutilizables de los agentes.{% elif active_view == 'chats' %}Historial y papelera de todas las cuentas.{% elif active_view == 'health' %}Conexiones configuradas y resultados temporales.{% else %}Registro de acciones del administrador.{% endif %}</p>{% endif %}
+{% endblock %}
+{% block content %}
+{% if active_view == 'tables' %}{% include 'postal/_system_tables.html' %}{% endif %}
+{% if active_view == 'manage' %}{% include 'postal/_system_manage.html' %}{% endif %}
+{% if active_view == 'users' %}{% include 'postal/_system_users.html' %}{% endif %}
+{% if active_view == 'overview' %}{% include 'postal/_system_dashboard.html' %}{% endif %}
+{% if active_view == 'models' %}{% include 'postal/_system_models.html' %}{% endif %}
+{% if active_view == 'agents' %}{% include 'postal/_system_agents.html' %}{% endif %}
+{% if active_view == 'skills' %}{% include 'postal/_system_skills.html' %}{% endif %}
+{% if active_view == 'network' %}{% include 'postal/_system_network.html' %}{% endif %}
+{% if active_view == 'health' %}{% include 'postal/_system_health.html' %}{% endif %}
+{% if active_view == "chats" %}{% include 'postal/_system_chats.html' %}{% endif %}
+{% if active_view == "audit" %}{% include 'postal/_system_audit.html' %}{% endif %}
+{% endblock %}

@@ -1,0 +1,58 @@
+<div class="manage-directory">
+  <dl class="manage-overview" aria-label="Resumen de administración">
+    <div><dt>Usuarios activos</dt><dd>{{ account_counts.active }} <span>de {{ account_counts.total }} cuentas</span></dd></div>
+    <div><dt>Conversaciones activas</dt><dd>{{ analytics.chat_counts.active }}</dd></div>
+    <div><dt>Skills activas</dt><dd>{{ skill_count }}</dd></div>
+  </dl>
+
+  <section class="manage-area" aria-labelledby="manage-accounts">
+    <div class="manage-area-intro">
+      <h2 id="manage-accounts">{% include 'postal/_icon.html' with name='shield' %} Personas y accesos</h2>
+      <p>Controle quién puede entrar y qué puede configurar.</p>
+      <span class="manage-detail">{{ account_counts.admins }} administradores activos</span>
+    </div>
+    <div class="manage-destinations">
+      <a class="manage-destination" href="?view=users"><span><strong>Gestionar cuentas</strong><small>Consultar usuarios, cambiar roles y administrar accesos.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+      <a class="manage-destination manage-create" href="?view=users&new=1#account-editor"><span><strong>Crear usuario</strong><small>Registrar una cuenta y asignarle permisos.</small></span>{% include 'postal/_icon.html' with name='plus' %}</a>
+    </div>
+  </section>
+
+  <section class="manage-area" aria-labelledby="manage-assistant">
+    <div class="manage-area-intro">
+      <h2 id="manage-assistant">{% include 'postal/_icon.html' with name='chat' %} Asistente e IA</h2>
+      <p>Ajuste cómo planifica y responde el asistente postal.</p>
+      <div class="manage-agent-states"><span class="manage-state {% if planner_enabled %}is-active{% endif %}">SQL {{ planner_enabled|yesno:'activo,inactivo' }}</span><span class="manage-state {% if analyst_enabled %}is-active{% endif %}">Analista {{ analyst_enabled|yesno:'activo,inactivo' }}</span></div>
+    </div>
+    <div class="manage-destinations">
+      <a class="manage-destination" href="?view=agents"><span><strong>Configurar agentes</strong><small>Instrucciones, planificación y límites de respuesta.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+      <a class="manage-destination" href="?view=skills"><span><strong>Gestionar skills <em>{{ skill_count }} activas</em></strong><small>Activar y editar capacidades del asistente.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+    </div>
+  </section>
+
+  <section class="manage-area" aria-labelledby="manage-conversations">
+    <div class="manage-area-intro">
+      <h2 id="manage-conversations">{% include 'postal/_icon.html' with name='catalog' %} Conversaciones</h2>
+      <p>Revise la actividad y recupere conversaciones eliminadas.</p>
+      <span class="manage-detail">{{ analytics.chat_counts.trash }} en papelera · Recuperables durante 30 días</span>
+    </div>
+    <div class="manage-destinations">
+      <a class="manage-destination" href="?view=chats"><span><strong>Historial de usuarios <em>{{ analytics.chat_counts.active }} activas</em></strong><small>Explorar las conversaciones de cada cuenta.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+      <a class="manage-destination" href="?view=chats&trash=1"><span><strong>Papelera general</strong><small>Revisar y restaurar conversaciones eliminadas.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+    </div>
+  </section>
+
+  <section class="manage-area" aria-labelledby="manage-platform">
+    <div class="manage-area-intro">
+      <h2 id="manage-platform">{% include 'postal/_icon.html' with name='box' %} Plataforma y datos</h2>
+      <p>Modelos, conexiones y mantenimiento del sistema.</p>
+      <span class="manage-detail">{{ current_provider }} · {{ current_model|default:'Modelo sin definir' }}</span>
+    </div>
+    <div class="manage-destinations">
+      <a class="manage-destination" href="?view=models"><span><strong>Modelos y API</strong><small>Elegir proveedor, modelos y credenciales.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+      <a class="manage-destination" href="?view=tables"><span><strong>Permisos de tablas</strong><small>Ver qué tablas están permitidas y cambiar su acceso.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+      <a class="manage-destination" href="?view=network"><span><strong>Red y base de datos</strong><small>Origen postal: {{ database.engine }}.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+      <a class="manage-destination" href="?view=health"><span><strong>Estado y caché</strong><small>{{ cache_files }} archivos · {{ cache_bytes|filesizeformat }} en resultados temporales.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+      <a class="manage-destination" href="?view=audit"><span><strong>Auditoría administrativa</strong><small>Consultar cambios y acciones de administradores.</small></span>{% include 'postal/_icon.html' with name='arrow' %}</a>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,47 @@
+<div class="audit-workspace" id="audit">
+  <dl class="audit-summary" aria-label="Resumen de los resultados filtrados">
+    <div><dt>Acciones registradas</dt><dd>{{ audit_summary.total }}</dd></div>
+    <div><dt>Acciones hoy</dt><dd>{{ audit_summary.today }}</dd></div>
+    <div><dt>Administradores con cuenta</dt><dd>{{ audit_summary.actors }}</dd></div>
+    <div><dt>Acciones sensibles</dt><dd>{{ audit_summary.sensitive }}</dd></div>
+  </dl>
+  <section class="audit-directory" aria-labelledby="audit-title">
+    <div class="audit-heading">
+      <div><h2 id="audit-title">Historial de actividad</h2><p>Quién hizo qué, cuándo y sobre qué recurso.</p></div>
+      <a class="button secondary" href="?{{ audit_query }}&amp;export=csv">{% include 'postal/_icon.html' with name='download' %} Exportar CSV</a>
+    </div>
+    <form method="get" class="audit-filters" aria-label="Filtrar actividad">
+      <input type="hidden" name="view" value="audit">
+      <div class="audit-search"><label for="audit-search">Buscar en el registro</label><input id="audit-search" name="q" type="search" value="{{ audit_filters.q }}" placeholder="Nombre, recurso o código de acción" maxlength="150"></div>
+      <div><label for="audit-action">Acción</label><select id="audit-action" name="action_type"><option value="">Todas las acciones</option>{% for value, label in audit_actions %}<option value="{{ value }}" {% if audit_filters.action_type == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+      <div><label for="audit-actor">Administrador</label><select id="audit-actor" name="actor"><option value="">Todos</option>{% for actor in audit_actors %}<option {% if audit_filters.actor == actor %}selected{% endif %}>{{ actor }}</option>{% endfor %}</select></div>
+      <div><label for="audit-start">Desde</label><input id="audit-start" type="date" name="start" value="{{ audit_filters.start }}"></div>
+      <div><label for="audit-end">Hasta</label><input id="audit-end" type="date" name="end" value="{{ audit_filters.end }}"></div>
+      <button class="button" type="submit">Filtrar</button><a class="audit-clear" href="?view=audit">Limpiar</a>
+    </form>
+    {% for error in audit_errors %}<p class="audit-error" role="alert">{{ error }}</p>{% endfor %}
+    <div class="audit-result-line"><span>{{ audits.paginator.count }} resultado{{ audits.paginator.count|pluralize:"s" }}{% if audits.paginator.count %} · Mostrando {{ audits.start_index }}–{{ audits.end_index }}{% endif %}</span><span>Hora de Bolivia · UTC−4</span></div>
+    {% if audits %}
+    <div class="audit-table-wrap"><table class="audit-table"><caption class="sr-only">Acciones administrativas ordenadas de más reciente a más antigua</caption>
+      <thead><tr><th scope="col">Fecha y hora</th><th scope="col">Administrador</th><th scope="col">Acción</th><th scope="col">Recurso y detalle</th><th scope="col">Registro</th></tr></thead>
+      <tbody>{% for item in audits %}<tr>
+        <td data-label="Fecha"><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:'d M Y' }}<small>{{ item.created_at|date:'H:i:s' }}</small></time></td>
+        <td data-label="Administrador"><span class="audit-actor">{{ item.actor }}</span><small>{{ item.metadata.method|default:'Registro anterior' }}</small></td>
+        <td data-label="Acción"><strong class="audit-action{% if item.destructive %} is-sensitive{% endif %}">{{ item.label }}</strong><small>{{ item.category }}</small></td>
+        <td data-label="Detalle" class="audit-description">{{ item.description }}{% if item.metadata.resource %}<small>{{ item.metadata.resource }}</small>{% endif %}</td>
+        <td data-label="Registro"><details class="audit-details"><summary>#{{ item.pk }}</summary><dl>
+          <div><dt>Código</dt><dd>{{ item.action }}</dd></div>
+          {% if item.metadata.operation %}<div><dt>Operación</dt><dd>{% if item.metadata.operation == 'created' %}Creación{% else %}Actualización{% endif %}</dd></div>{% endif %}
+          {% if item.metadata.fields %}<div><dt>Campos modificados</dt><dd>{{ item.metadata.fields|join:', ' }}</dd></div>{% endif %}
+          <div><dt>IP directa</dt><dd>{{ item.metadata.ip|default:'No registrada' }}</dd></div>
+          <div><dt>Ruta</dt><dd>{{ item.metadata.path|default:'No registrada' }}</dd></div>
+        </dl></details></td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<div class="audit-empty"><h3>{% if audit_filters.q or audit_filters.action_type or audit_filters.actor or audit_filters.start or audit_filters.end %}No hay actividad para estos filtros{% else %}Todavía no hay actividad registrada{% endif %}</h3><p>Las acciones de administración aparecerán aquí. Puede ajustar los filtros para ampliar la búsqueda.</p></div>{% endif %}
+    <div class="audit-footer"><p>Se registran operaciones y nombres de campos; no se guardan claves, instrucciones ni preguntas. Los registros anteriores pueden tener menos detalles.</p>
+      {% if audits.has_other_pages %}<nav class="audit-pagination" aria-label="Páginas de auditoría">{% if audits.has_previous %}<a href="?{{ audit_query }}&amp;page={{ audits.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ audits.number }} de {{ audits.paginator.num_pages }}</span>{% if audits.has_next %}<a href="?{{ audit_query }}&amp;page={{ audits.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+    </div>
+  </section>
+  <p class="audit-note">Los indicadores corresponden a los filtros actuales. Acciones sensibles: eliminaciones de skills o del catálogo, desactivaciones de usuarios, restablecimientos de contraseña y envíos a la papelera.</p>
+</div>

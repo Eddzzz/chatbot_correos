@@ -1,0 +1,16 @@
+{$BOLIPOST_HOST} {
+	header {
+		-Server
+		Strict-Transport-Security "max-age=31536000"
+		defer
+	}
+
+	handle_path /static/* {
+		root * .static
+		file_server
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:{$BOLIPOST_PORT:8000}
+	}
+}

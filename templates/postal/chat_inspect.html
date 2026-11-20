@@ -1,0 +1,16 @@
+{% extends 'postal/system_base.html' %}
+{% load postal_static %}
+{% block title %}Revisar conversación{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% versioned_static 'postal/chat-inspect.css' %}"><script src="{% versioned_static 'vendor/chart.umd.js' %}" defer></script><script src="{% versioned_static 'postal/app.js' %}" defer></script>{% endblock %}
+{% block system_header %}<h1 id="system-view-title" title="{{ chat.title }}">{{ chat.title }}</h1><p>{{ chat.user.username }} · {{ chat.updated_at|date:'d/m/Y H:i' }} · {% if chat.deleted_at %}En papelera{% else %}Activa{% endif %} · Solo lectura</p>{% endblock %}
+{% block system_header_actions %}<a class="button" href="/system/?view=chats&amp;user={{ chat.user_id }}&amp;trash={{ chat.deleted_at|yesno:'1,0' }}#chats">Volver a conversaciones</a>{% endblock %}
+{% block content %}
+{{ transcript|json_script:'inspect-conversation' }}
+{% if unverified_results %}<p class="notice">Se ocultaron respuestas antiguas cuyo origen no se pudo verificar.</p>{% endif %}
+{{ column_labels|json_script:'column-labels' }}
+{{ label_words|json_script:'label-words' }}
+<div id="inspect-messages" class="system-transcript messages" role="region" aria-label="Conversación guardada">
+<noscript>{% for message in transcript %}<section class="system-section">{% if message.kind == 'question' %}<h2>Consulta</h2><p>{{ message.text|linebreaksbr }}</p>{% else %}<h2>{{ message.result.title|default:'Respuesta' }}</h2><p>{{ message.result.answer|linebreaksbr }}</p>{% if message.result.error.message %}<p class="notice">{{ message.result.error.message }}</p>{% endif %}
+{% if message.result.panels %}{% for panel in message.result.panels %}<h3>{{ panel.title }}</h3><div class="system-table" role="region" aria-label="Datos de la respuesta" tabindex="0"><table><tbody>{% for row in panel.rows %}{% if forloop.first %}<tr>{% for name, value in row.items %}<th scope="col">{{ name }}</th>{% endfor %}</tr>{% endif %}<tr>{% for name, value in row.items %}<td>{{ value|default_if_none:'Sin dato' }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% endfor %}
+{% else %}<div class="system-table" role="region" aria-label="Datos de la respuesta" tabindex="0"><table><tbody>{% for row in message.result.rows %}{% if forloop.first %}<tr>{% for name, value in row.items %}<th scope="col">{{ name }}</th>{% endfor %}</tr>{% endif %}<tr>{% for name, value in row.items %}<td>{{ value|default_if_none:'Sin dato' }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% endif %}{% endif %}</section>{% empty %}<p>Esta conversación todavía no contiene mensajes.</p>{% endfor %}</noscript></div>
+{% endblock %}

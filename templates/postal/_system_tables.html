@@ -1,0 +1,70 @@
+<section class="table-permissions" aria-label="Control de acceso a tablas">
+  <dl class="table-permission-summary">
+    <div><dt>Tablas del catálogo</dt><dd>{{ table_counts.total }}</dd></div>
+    <div><dt>Permitidas</dt><dd>{{ table_counts.allowed }}</dd></div>
+    <div><dt>No permitidas</dt><dd>{{ table_counts.blocked }}</dd></div>
+  </dl>
+  <p class="table-permission-note">Estos permisos se aplican a las consultas nuevas de todos los usuarios. Los campos sensibles siguen protegidos y las consultas son de solo lectura.</p>
+  <nav class="table-permission-tabs" aria-label="Estado de las tablas">
+    <a href="?view=tables&amp;permission=allowed&amp;q={{ table_query|urlencode }}" {% if table_permission == 'allowed' %}aria-current="page"{% endif %}>Permitidas <span>{{ table_counts.allowed }}</span></a>
+    <a href="?view=tables&amp;permission=blocked&amp;q={{ table_query|urlencode }}" {% if table_permission == 'blocked' %}aria-current="page"{% endif %}>No permitidas <span>{{ table_counts.blocked }}</span></a>
+  </nav>
+  <form method="get" class="table-permission-filters" role="search">
+    <input type="hidden" name="view" value="tables">
+    <input type="hidden" name="permission" value="{{ table_permission }}">
+    <div><label for="table-search">Buscar tabla</label><input id="table-search" name="q" type="search" value="{{ table_query }}" placeholder="Nombre de la tabla" maxlength="150"></div>
+    <button class="button primary" type="submit">Filtrar</button>
+    {% if table_query %}<a href="?view=tables&amp;permission={{ table_permission }}">Limpiar búsqueda</a>{% endif %}
+  </form>
+  <p class="table-permission-results" role="status">{{ table_row_count }} tabla{{ table_row_count|pluralize }} {% if table_permission == 'allowed' %}permitida{{ table_row_count|pluralize }}{% else %}no permitida{{ table_row_count|pluralize }}{% endif %}{% if table_query %} que coinciden con la búsqueda{% endif %}</p>
+  <div class="table-permission-scroll" role="region" aria-label="Listado de permisos" tabindex="0">
+    <table role="table">
+      <colgroup><col class="permission-table-name"><col class="permission-table-fields"><col class="permission-table-action"></colgroup>
+      <thead><tr><th scope="col">Tabla</th><th scope="col">Campos de consulta</th><th scope="col">Cambiar permiso</th></tr></thead>
+      <tbody>
+      {% for table in table_rows %}
+        <tr>
+          <th scope="row"><code>{{ table.name }}</code>{% if table.derived %}<br><small>Fuente derivada</small>{% endif %}</th>
+          <td class="table-permission-columns">
+            {% if table.columns %}<details class="authorized-fields"><summary><span>{% if table.enabled %}Campos autorizados{% else %}Campos habilitables{% endif %}</span> <span class="table-field-count">{{ table.columns|length }}</span></summary><ul class="table-field-list" aria-label="Campos {% if table.enabled %}autorizados{% else %}habilitables{% endif %} de {{ table.name }}">{% for field in table.columns %}<li><code>{{ field }}</code></li>{% endfor %}</ul></details>{% else %}<span>Sin campos autorizados</span>{% endif %}
+            {% if table.protected %}<details class="protected-fields"><summary><span>Campos protegidos</span> <span class="table-field-count">{{ table.protected|length }}</span></summary><ul class="table-field-list" aria-label="Campos protegidos de {{ table.name }}">{% for field in table.protected %}<li><code>{{ field }}</code></li>{% endfor %}</ul></details>{% endif %}
+          </td>
+          <td class="table-permission-actions">
+            <form method="post" data-table-confirm-title="¿{{ table.enabled|yesno:'Bloquear,Permitir' }} la tabla {{ table.name }}?" data-table-confirm-action="{{ table.enabled|yesno:'Bloquear tabla,Permitir tabla' }}">
+              {% csrf_token %}<input type="hidden" name="action" value="table_toggle"><input type="hidden" name="table" value="{{ table.name }}"><input type="hidden" name="enabled" value="{{ table.enabled|yesno:'0,1' }}">
+              <input type="hidden" name="q" value="{{ table_query }}"><input type="hidden" name="permission" value="{{ table_permission }}">
+              <button class="button" type="submit" {% if not table.editable %}disabled aria-describedby="protected-{{ forloop.counter }}"{% endif %} aria-label="{{ table.enabled|yesno:'Bloquear,Permitir' }} {{ table.name }}">{{ table.enabled|yesno:'Bloquear,Permitir' }}</button>
+              {% if not table.editable %}<small id="protected-{{ forloop.counter }}">{% if table.fields_editable %}Autoriza campos para permitir esta tabla{% else %}Protección obligatoria{% endif %}</small>{% endif %}
+            </form>
+            {% if table.fields_editable %}<a class="button table-edit-fields" href="{{ table_return_url }}&amp;edit_fields={{ table.name|urlencode }}#field-editor" aria-label="Editar campos de {{ table.name }}">Editar campos</a>{% endif %}
+          </td>
+        </tr>
+      {% empty %}<tr><td colspan="3" class="table-permission-empty">No hay tablas que coincidan con esta búsqueda. <a href="?view=tables&amp;permission={{ table_permission }}">Ver tablas {% if table_permission == 'allowed' %}permitidas{% else %}no permitidas{% endif %}</a></td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% if field_editor %}
+<dialog id="field-editor" class="users-dialog table-field-editor" aria-labelledby="field-editor-title" aria-describedby="field-editor-help" data-auto-open data-return-url="{{ table_return_url }}" data-return-focus="a[aria-label='Editar campos de {{ field_editor.name }}']">
+  <header class="users-dialog-heading"><div><h2 id="field-editor-title">Editar campos de {{ field_editor.name }}</h2><p id="field-editor-help">Marca los campos que quieres autorizar. Los campos desmarcados quedarán protegidos.</p></div><a class="users-dialog-close" href="{{ table_return_url }}" data-close-dialog aria-label="Cerrar editor de campos">{% include 'postal/_icon.html' with name='close' %}</a></header>
+  <form method="post" action="?view=tables" data-table-confirm-title="¿Guardar los campos de {{ field_editor.name }}?" data-table-confirm-action="Guardar campos">
+    {% csrf_token %}<input type="hidden" name="action" value="table_columns"><input type="hidden" name="table" value="{{ field_editor.name }}"><input type="hidden" name="q" value="{{ table_query }}"><input type="hidden" name="permission" value="{{ table_permission }}">
+    <fieldset class="table-field-options"><legend class="table-field-legend">Permisos por campo</legend>
+      {% for field in field_editor.fields %}<label class="table-field-option{% if field.locked %} is-locked{% endif %}"><input type="checkbox" name="columns" value="{{ field.name }}"{% if field.selected %} checked{% endif %}{% if field.locked %} disabled{% endif %}><span><code>{{ field.name }}</code>{% if field.locked %}<small>Protección obligatoria</small>{% endif %}</span></label>{% endfor %}
+    </fieldset>
+    <p class="table-field-help">Las contraseñas, claves y tokens de acceso no se pueden autorizar. Si dejas todos los campos desmarcados, la tabla quedará bloqueada.</p>
+    <footer class="users-dialog-footer"><a class="button" href="{{ table_return_url }}" data-close-dialog>Cancelar</a><button class="button primary" type="submit">Guardar campos</button></footer>
+  </form>
+</dialog>
+{% endif %}
+<dialog id="table-confirmation" class="users-dialog table-confirm-dialog" aria-labelledby="table-confirm-title" aria-describedby="table-confirm-text">
+  <div class="table-confirm-copy">
+    <h2 id="table-confirm-title"></h2>
+    <p id="table-confirm-text">El cambio se aplicará a las consultas nuevas de todos los usuarios.</p>
+    <p id="table-confirm-empty" hidden>La tabla quedará bloqueada porque no se autorizó ningún campo.</p>
+  </div>
+  <form method="dialog" class="users-dialog-footer">
+    <button class="button" type="submit" value="cancel" autofocus>Cancelar</button>
+    <button class="button primary" type="submit" value="confirm" id="table-confirm-action">Confirmar</button>
+  </form>
+</dialog>

@@ -1,0 +1,7 @@
+{% extends 'postal/system_base.html' %}
+{% block title %}Mi papelera{% endblock %}
+{% block system_header %}<h1 id="system-view-title">Mi papelera</h1><p>Puedes restaurar una conversación durante 30 días desde su eliminación.</p>{% endblock %}
+{% block content %}
+<form hidden>{% csrf_token %}</form>
+<section class="system-section"><p>Después de 30 días, el contenido se elimina definitivamente. La vigencia de los resultados y sus PDF sigue siendo de 24 horas.</p><div id="trash-list" class="system-trash-list" aria-live="polite"><p>Cargando conversaciones…</p></div><button id="trash-more" class="button" type="button" hidden>Cargar más</button><p id="trash-error" class="error-text" role="alert" hidden></p><button id="trash-retry" class="button" type="button" hidden>Volver a intentar</button></section>
+{% endblock %}

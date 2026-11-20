@@ -1,0 +1,59 @@
+<div class="users-workspace">
+<dl class="users-summary"><div><dt>Cuentas registradas</dt><dd>{{ account_counts.total }}</dd></div><div><dt>Activas</dt><dd>{{ account_counts.active }}</dd></div><div><dt>Inactivas</dt><dd>{{ account_counts.inactive }}</dd></div><div><dt>Administradores activos</dt><dd>{{ account_counts.admins }}</dd></div></dl>
+<section class="users-directory" aria-labelledby="users-directory-title">
+  <div class="dashboard-panel-heading users-directory-heading">
+    <div><h2 id="users-directory-title">Directorio de usuarios</h2><p>Gestione cuentas y permisos de Bolipost.</p></div>
+    <a class="button primary" href="?view=users&new=1#account-editor" {% if not editing_account and not password_account %}data-open-dialog="account-editor"{% endif %}>{% include 'postal/_icon.html' with name='plus' %} Crear usuario</a>
+  </div>
+  <form method="get" class="users-filters">
+    <input type="hidden" name="view" value="users">
+    <div><label for="user-search">Buscar cuenta</label><input type="search" id="user-search" name="q" value="{{ search }}" placeholder="Nombre, usuario o correo" maxlength="150"></div>
+    <div><label for="user-status">Estado o rol</label><select id="user-status" name="status"><option value="all" {% if account_status == 'all' %}selected{% endif %}>Todas</option><option value="active" {% if account_status == 'active' %}selected{% endif %}>Activas</option><option value="inactive" {% if account_status == 'inactive' %}selected{% endif %}>Inactivas</option><option value="admins" {% if account_status == 'admins' %}selected{% endif %}>Administradores</option></select></div>
+    <button type="submit" class="button">Filtrar</button>
+    {% if search or account_status != 'all' %}<a class="users-clear-filter" href="?view=users">Limpiar filtros</a>{% endif %}
+  </form>
+  <p class="users-directory-count">{{ accounts.paginator.count }} cuenta{{ accounts.paginator.count|pluralize:'s' }}{% if search or account_status != 'all' %} encontrada{{ accounts.paginator.count|pluralize:'s' }}{% endif %}</p>
+  <div class="system-table users-table" tabindex="0" role="region" aria-label="Directorio de usuarios">
+    <table><thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th class="num">Chats</th><th>Acciones</th></tr></thead>
+    <tbody>{% for account in accounts %}<tr>
+      <td><div class="users-identity"><span class="users-avatar" aria-hidden="true">{{ account.username|first|upper }}</span><div><strong>{{ account.get_full_name|default:account.username }}</strong><small>@{{ account.username }}{% if account.pk == user.pk %} · Tú{% endif %}</small>{% if account.email %}<small>{{ account.email }}</small>{% endif %}</div></div></td>
+      <td data-label="Rol"><span class="account-role">{% if account.is_superuser %}Administrador{% else %}Usuario{% endif %}</span></td>
+      <td data-label="Estado"><span class="account-state {% if account.is_active %}is-active{% endif %}">{{ account.is_active|yesno:'Activa,Inactiva' }}</span></td>
+      <td data-label="Chats" class="num">{{ account.chat_count }}</td>
+      <td><div class="users-row-actions">
+        <a href="?view=users&edit_user={{ account.pk }}#account-editor">Editar</a>
+        <a class="users-password-action" href="?view=users&reset_user={{ account.pk }}#password-editor">Restablecer contraseña</a>
+        {% if account.pk != user.pk %}<form method="post" {% if account.is_active %}data-confirm="¿Desactivar la cuenta {{ account.username }}? Se bloqueará su acceso y se conservarán sus conversaciones."{% endif %}>{% csrf_token %}<input type="hidden" name="action" value="user_toggle"><input type="hidden" name="enabled" value="{% if account.is_active %}0{% else %}1{% endif %}"><input type="hidden" name="user_id" value="{{ account.pk }}"><button type="submit" class="users-text-action">{% if account.is_active %}Desactivar{% else %}Activar{% endif %}</button></form>{% endif %}
+      </div></td>
+    </tr>{% empty %}<tr><td class="users-empty" colspan="5"><strong>No se encontraron cuentas</strong><p>Pruebe otro nombre, usuario o correo, o quite los filtros.</p><a href="?view=users">Ver todas las cuentas</a></td></tr>{% endfor %}</tbody></table>
+  </div>
+  <footer class="users-directory-footer"><span>{{ accounts.start_index }}–{{ accounts.end_index }} de {{ accounts.paginator.count }} cuenta{{ accounts.paginator.count|pluralize:'s' }}</span>
+  {% if accounts.has_other_pages %}<nav aria-label="Páginas de usuarios">{% if accounts.has_previous %}<a href="?view=users&q={{ search|urlencode }}&status={{ account_status }}&page={{ accounts.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ accounts.number }} de {{ accounts.paginator.num_pages }}</span>{% if accounts.has_next %}<a href="?view=users&q={{ search|urlencode }}&status={{ account_status }}&page={{ accounts.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+  <a href="?view=audit">Ver actividad administrativa {% include 'postal/_icon.html' with name='arrow' %}</a></footer>
+</section>
+<details class="users-security"><summary>Permisos y seguridad de las cuentas</summary><p>Asigne el rol de administrador solo a quienes necesiten configurar el sistema. Desactivar una cuenta bloquea su acceso, conserva sus chats y cancela las consultas en curso. Restablecer su contraseña cierra sus otras sesiones.</p></details>
+</div>
+<dialog id="account-editor" class="users-dialog" aria-labelledby="account-dialog-title" aria-describedby="account-dialog-description" {% if account_dialog_open %}data-auto-open{% endif %}>
+  <header class="users-dialog-heading"><div><h2 id="account-dialog-title">{% if editing_account %}Editar usuario{% else %}Nuevo usuario{% endif %}</h2><p id="account-dialog-description">{% if editing_account %}Datos y permisos de @{{ editing_account.username }}.{% else %}Complete los datos y defina el acceso a Bolipost.{% endif %}</p></div><a class="users-dialog-close" href="?view=users" data-close-dialog aria-label="Cerrar formulario">{% include 'postal/_icon.html' with name='close' %}</a></header>
+  <form method="post" id="account-form">{% csrf_token %}<input type="hidden" name="action" value="user_save">{% if editing_account %}<input type="hidden" name="user_id" value="{{ editing_account.pk }}">{% endif %}
+    {% if account_form.errors %}<div class="users-form-error" role="alert"><strong>Revise los campos señalados.</strong>{{ account_form.non_field_errors }}</div>{% endif %}
+    <div class="users-dialog-fields">{% for field in account_form %}
+      <div class="system-field {% if field.field.widget.input_type == 'checkbox' %}system-check users-field-wide{% endif %}{% if field.name == 'email' %} users-field-wide{% endif %}">
+      {% if field.field.widget.input_type == 'checkbox' %}<label>{{ field }} <span>{{ field.label }}</span></label>{% else %}<label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="users-required" aria-hidden="true"> *</span>{% else %}<span class="users-optional"> · Opcional</span>{% endif %}</label>{{ field }}{% endif %}
+      {% if field.help_text %}<small id="{{ field.auto_id }}_helptext">{{ field.help_text }}</small>{% endif %}{{ field.errors }}</div>
+    {% endfor %}</div>
+    {% if editing_account.pk == user.pk %}<p class="users-self-note">Su cuenta debe conservar el rol de administrador y permanecer activa.</p>{% endif %}
+    <footer class="users-dialog-footer"><a class="button" href="?view=users" data-close-dialog>Cancelar</a><button type="submit" class="button primary">{% if editing_account %}Guardar cambios{% else %}Crear usuario{% endif %}</button></footer>
+  </form>
+</dialog>
+{% if password_account %}
+<dialog id="password-editor" class="users-dialog users-password-dialog" aria-labelledby="password-dialog-title" aria-describedby="password-dialog-description" data-auto-open>
+  <header class="users-dialog-heading"><div><h2 id="password-dialog-title">Restablecer contraseña</h2><p id="password-dialog-description">Nueva contraseña para @{{ password_account.username }}.</p></div><a class="users-dialog-close" href="?view=users" data-close-dialog aria-label="Cerrar formulario">{% include 'postal/_icon.html' with name='close' %}</a></header>
+  <form method="post" id="password-form">{% csrf_token %}<input type="hidden" name="action" value="user_password_reset"><input type="hidden" name="user_id" value="{{ password_account.pk }}">
+    <p class="users-password-note">La nueva contraseña reemplazará la actual y cerrará las otras sesiones de esta cuenta. Compártala de forma segura con el usuario.</p>
+    {% if password_form.errors %}<div class="users-form-error" role="alert"><strong>No se cambió la contraseña. Revise los campos señalados.</strong>{{ password_form.non_field_errors }}</div>{% endif %}
+    <div class="users-dialog-fields">{% for field in password_form %}<div class="system-field users-field-wide"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</small>{% endif %}{{ field.errors }}</div>{% endfor %}</div>
+    <footer class="users-dialog-footer"><a class="button" href="?view=users" data-close-dialog>Cancelar</a><button type="submit" class="button primary">Restablecer contraseña</button></footer>
+  </form>
+</dialog>
+{% endif %}

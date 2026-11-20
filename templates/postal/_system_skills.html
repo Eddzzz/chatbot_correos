@@ -1,0 +1,70 @@
+<div class="skills-workspace">
+  <section class="skills-panel skills-capabilities" aria-labelledby="capabilities-title">
+    <div class="skills-heading">
+      <div><h2 id="capabilities-title">Capacidades del asistente</h2><p>Elige las funciones disponibles para todos los usuarios.</p></div>
+      <span class="skills-scope">Configuración global</span>
+    </div>
+    <form id="configuration" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="settings">
+      <input type="hidden" name="settings_area" value="skills">
+      {% if form.errors %}<div class="notice system-errors" role="alert"><strong>No se guardaron los cambios.</strong><p>Revise los campos señalados.</p>{{ form.non_field_errors }}{% for field in form %}{{ field.errors }}{% endfor %}</div>{% endif %}
+      <div class="skills-capability-list">
+        {% for block in settings_blocks %}{% for field, clear in block.fields %}
+        <div class="skills-capability">
+          <label for="{{ field.id_for_label }}"><span class="skills-capability-copy"><strong>{{ field.label }}</strong><small>{% if field.name == 'SKILL_CHAT' %}Preguntas y respuestas{% elif field.name == 'SKILL_TRACKING' %}Seguimiento postal{% elif field.name == 'SKILL_DASHBOARD' %}Análisis de resultados{% elif field.name == 'SKILL_CATALOG' %}Consulta de datos{% elif field.name == 'SKILL_CSV' %}Todas las filas de cada panel{% elif field.name == 'SKILL_XLSX' %}Informe completo por hojas{% elif field.name == 'SKILL_BULK_TRACKING' %}Hasta seis códigos por consulta{% else %}Descarga de informes{% endif %}</small></span><span class="skills-switch">{{ field }}<span aria-hidden="true"></span></span></label>
+          {{ field.errors }}
+        </div>
+        {% endfor %}{% endfor %}
+      </div>
+      <div class="skills-save"><p>Aplica a consultas nuevas. Los permisos se comprueban en el servidor.</p><button class="button primary" type="submit">Guardar configuración</button></div>
+    </form>
+  </section>
+
+  <div class="skills-layout {% if show_skill_editor %}has-editor{% endif %}" id="custom-skills">
+    <section class="skills-panel skills-library" aria-labelledby="skills-library-title">
+      <div class="skills-heading"><div><h2 id="skills-library-title">Skills personalizadas <span class="skills-count" aria-label="{{ skills|length }} skills personalizadas">{{ skills|length }}</span></h2><p>Instrucciones propias para el planificador, el analista o ambos.</p></div><a class="button primary" href="?view=skills&amp;new_skill=1#skill-editor">{% include 'postal/_icon.html' with name='plus' %} Nueva skill</a></div>
+      {% if skills %}
+      <ul class="skills-list">
+        {% for skill in skills %}
+        <li{% if editing_skill.pk == skill.pk %} class="is-editing"{% endif %}>
+          <div class="skills-item-heading"><h3>{{ skill.name }}</h3><span class="skills-status {% if skill.enabled %}is-enabled{% endif %}">{{ skill.enabled|yesno:'Activa,Inactiva' }}</span></div>
+          <p>{{ skill.get_stage_display }}</p>
+          <div class="skills-item-actions"><a href="?view=skills&amp;edit_skill={{ skill.pk }}#skill-editor">Editar<span class="skills-sr"> {{ skill.name }}</span></a>{% include 'postal/_skill_toggle.html' %}<form method="post" data-confirm="¿Eliminar esta skill?">{% csrf_token %}<input type="hidden" name="skill_id" value="{{ skill.pk }}"><button type="submit" name="action" value="skill_delete">Eliminar<span class="skills-sr"> {{ skill.name }}</span></button></form></div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="skills-empty">{% include 'postal/_icon.html' with name='catalog' %}<h3>Sin skills personalizadas</h3><p>Las skills predefinidas están disponibles debajo. También puedes crear instrucciones propias.</p><a href="#skill-presets">Ver predefinidas {% include 'postal/_icon.html' with name='catalog' %}</a></div>
+      {% endif %}
+      <p class="skills-library-note">Las skills activas se incorporan en consultas nuevas y conservan las validaciones de seguridad y evidencia.</p>
+    </section>
+
+    {% if show_skill_editor %}<section class="skills-panel skills-editor" id="skill-editor" aria-labelledby="skill-editor-title">
+      <div class="skills-heading"><div><h2 id="skill-editor-title">{% if editing_skill %}Editar skill{% else %}Nueva skill{% endif %}</h2><p>{% if editing_skill %}Actualiza las instrucciones de {{ editing_skill.name }}.{% else %}Define qué debe tener en cuenta el agente al responder.{% endif %}</p></div><a class="skills-close" href="?view=skills#custom-skills" aria-label="Cerrar editor de skills">Cerrar</a></div>
+      <form method="post">
+        {% csrf_token %}<input type="hidden" name="action" value="skill_save">
+        {% if editing_skill %}<input type="hidden" name="skill_id" value="{{ editing_skill.pk }}">{% endif %}
+        {{ skill_form.non_field_errors }}
+        <div class="skills-editor-fields">
+          {% for field in skill_form %}
+          <div class="system-field skills-field-{{ field.name }}">
+            {% if field.field.widget.input_type == 'checkbox' %}<label class="skills-enabled-label" for="{{ field.id_for_label }}"><span><strong>{{ field.label }}</strong><small>Incluir en consultas nuevas</small></span><span class="skills-switch">{{ field }}<span aria-hidden="true"></span></span></label>{% else %}<label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% endif %}
+            {% if field.name == 'instructions' %}<small>Hasta 4.000 caracteres. Usa instrucciones concretas sobre datos, análisis y presentación.</small>{% endif %}{{ field.errors }}
+          </div>
+          {% endfor %}
+        </div>
+        <div class="skills-editor-actions"><button class="button primary" type="submit">Guardar skill</button><a href="?view=skills#custom-skills">Cancelar{% if editing_skill %} edición{% endif %}</a></div>
+      </form>
+    </section>{% endif %}
+  </div>
+
+  <section class="skills-panel skills-presets" id="skill-presets" aria-labelledby="skill-presets-title">
+    <div class="skills-heading"><div><h2 id="skill-presets-title">Skills predefinidas</h2><p>Instrucciones guardadas de análisis, estadísticas y gráficas. Las activas se aplican a las consultas nuevas; puedes editarlas o desactivarlas.</p></div></div>
+    <div class="skills-preset-list">{% for preset in skill_presets %}
+      <article class="skills-preset" data-skill-key="{{ preset.skill.preset_key }}">
+        {% with skill=preset.skill %}<div class="skills-preset-content"><div class="skills-item-heading"><h3>{{ skill.name }}</h3><span class="skills-status {% if skill.enabled %}is-enabled{% endif %}">{{ skill.enabled|yesno:'Activa,Inactiva' }}</span></div><span>{{ preset.category }} · {{ skill.get_stage_display }}</span><p class="skills-instruction-preview">{{ skill.instructions|truncatechars:150 }}</p><div class="skills-item-actions"><a href="?view=skills&amp;edit_skill={{ skill.pk }}#skill-editor" aria-label="Editar {{ skill.name }}">Editar</a>{% include 'postal/_skill_toggle.html' %}</div></div>{% endwith %}
+      </article>
+    {% endfor %}</div>
+  </section>
+</div>

@@ -1,0 +1,56 @@
+{% if chat_account %}
+<section class="chat-account-dashboard" aria-labelledby="chat-account-title">
+  <a class="chat-back-link" href="?view=chats">{% include 'postal/_icon.html' with name='arrow' %} Cambiar usuario</a>
+  <header class="chat-account-heading">
+    <div class="chat-account-identity"><span class="chat-account-avatar" aria-hidden="true">{{ chat_account.username|first|upper }}</span><div><h2 id="chat-account-title">{{ chat_account.get_full_name|default:chat_account.username }}</h2><p>@{{ chat_account.username }} · {% if chat_account.is_active %}Cuenta activa{% else %}Cuenta inactiva{% endif %}</p></div></div>
+    <span class="chat-summary-label">Resumen de la cuenta</span>
+  </header>
+  <dl class="chat-account-metrics">
+    <div><dt>Conversaciones</dt><dd data-number="{{ chat_account.history_count|add:chat_account.trash_count }}">{{ chat_account.history_count|add:chat_account.trash_count }}</dd><small>Guardadas en esta cuenta</small></div>
+    <div><dt>En historial</dt><dd data-number="{{ chat_account.history_count }}">{{ chat_account.history_count }}</dd><small>Disponibles para consultar</small></div>
+    <div><dt>En papelera</dt><dd data-number="{{ chat_account.trash_count }}">{{ chat_account.trash_count }}</dd><small>Se conservan durante 30 días</small></div>
+    <div><dt>Tokens registrados</dt><dd {% if chat_usage.tokens != None %}data-number="{{ chat_usage.tokens }}"{% endif %}>{{ chat_usage.tokens|default_if_none:'—' }}</dd><small>{% if chat_usage.calls %}{{ chat_usage.calls }} llamada{{ chat_usage.calls|pluralize:'s' }} a la IA{% else %}Sin consumo registrado{% endif %}</small></div>
+  </dl>
+  <div class="chat-usage-breakdown"><span>Entrada <strong {% if chat_usage.prompt != None %}data-number="{{ chat_usage.prompt }}"{% endif %}>{{ chat_usage.prompt|default_if_none:'—' }}</strong></span><span>Salida <strong {% if chat_usage.completion != None %}data-number="{{ chat_usage.completion }}"{% endif %}>{{ chat_usage.completion|default_if_none:'—' }}</strong></span><span class="chat-usage-scope">Consumo histórico de la cuenta{% if chat_usage.unreported %} · {{ chat_usage.unreported }} llamada{{ chat_usage.unreported|pluralize:'s' }} sin total informado{% endif %}</span></div>
+  <details class="chat-usage-note"><summary>Qué incluye el consumo</summary><p>Tokens informados por el proveedor en todas las llamadas de esta cuenta, incluidos los reintentos y las consultas sin conversación guardada. Los valores no informados aparecen como —. El consumo no cambia al buscar o cambiar entre historial y papelera.</p></details>
+</section>
+<section class="system-section chat-history-panel" id="chats">
+  <header class="chat-history-heading"><h2>Conversaciones de {{ chat_account.username }}</h2><nav class="chat-history-tabs" aria-label="Conversaciones de la cuenta">
+    <a href="?view=chats&amp;user={{ chat_account.pk }}&amp;trash=0#chats" {% if not trash %}aria-current="page"{% endif %}>Historial <span>{{ chat_account.history_count }}</span></a>
+    <a href="?view=chats&amp;user={{ chat_account.pk }}&amp;trash=1#chats" {% if trash %}aria-current="page"{% endif %}>Papelera <span>{{ chat_account.trash_count }}</span></a>
+  </nav></header>
+  {% if trash %}<p class="chat-retention-note">Las conversaciones se eliminan definitivamente a los 30 días de enviarlas a la papelera.</p>{% endif %}
+  <form method="get" class="system-search">
+    <input type="hidden" name="view" value="chats"><input type="hidden" name="user" value="{{ chat_account.pk }}"><input type="hidden" name="trash" value="{{ trash|yesno:'1,0' }}">
+    <label for="chat-search">Buscar en {% if trash %}la papelera{% else %}el historial{% endif %} de {{ chat_account.username }}</label>
+    <div><input type="search" id="chat-search" name="q" value="{{ search }}" placeholder="Título de la conversación" maxlength="150"><button class="button" type="submit">Buscar</button></div>
+  </form>
+  <div class="system-table" role="region" aria-label="Conversaciones de {{ chat_account.username }}" tabindex="0">
+    <table><thead><tr><th>Conversación</th><th>{% if trash %}En papelera desde{% else %}Actualizada{% endif %}</th><th>Acción</th></tr></thead>
+    <tbody>{% for chat in chats %}<tr>
+      <td><a href="/system/chats/{{ chat.pk }}/">{{ chat.title }}</a></td>
+      <td data-label="{% if trash %}En papelera desde{% else %}Actualizada{% endif %}">{% if trash %}{{ chat.deleted_at|date:'d/m/Y H:i' }}{% else %}{{ chat.updated_at|date:'d/m/Y H:i' }}{% endif %}</td>
+      <td><form method="post" {% if not trash %}data-confirm="¿Enviar esta conversación a la papelera?"{% endif %}>{% csrf_token %}<input type="hidden" name="chat_id" value="{{ chat.pk }}"><button class="button" name="action" value="{% if trash %}restore{% else %}trash{% endif %}">{% if trash %}Restaurar{% else %}Enviar a papelera{% endif %}</button></form></td>
+    </tr>{% empty %}<tr><td class="chat-empty" colspan="3">{% if search %}No hay conversaciones que coincidan con la búsqueda.{% elif trash %}La papelera de esta cuenta está vacía.{% else %}Esta cuenta todavía no tiene conversaciones en su historial.{% endif %}</td></tr>{% endfor %}</tbody></table>
+  </div>
+  {% if chats.has_other_pages %}<nav class="system-actions" aria-label="Páginas de conversaciones">
+    {% if chats.has_previous %}<a href="?{{ chat_query }}&amp;page={{ chats.previous_page_number }}#chats">Anterior</a>{% endif %}<span>Página {{ chats.number }} de {{ chats.paginator.num_pages }}</span>{% if chats.has_next %}<a href="?{{ chat_query }}&amp;page={{ chats.next_page_number }}#chats">Siguiente</a>{% endif %}
+  </nav>{% endif %}
+</section>
+{% else %}
+<section class="chat-picker" id="chats" aria-labelledby="chat-picker-title">
+  <header class="chat-picker-heading"><div><h2 id="chat-picker-title">Seleccionar usuario</h2><p>Elija una cuenta para revisar su consumo y después consultar sus conversaciones.</p></div><span>{{ chat_accounts.paginator.count }} cuenta{{ chat_accounts.paginator.count|pluralize:'s' }}</span></header>
+  <form method="get" class="system-search">
+    <input type="hidden" name="view" value="chats"><label for="chat-account-search">Buscar cuenta</label>
+    <div><input type="search" id="chat-account-search" name="q" value="{{ search }}" placeholder="Usuario, nombre o correo" maxlength="150"><button class="button" type="submit">Buscar</button>{% if search %}<a href="?view=chats">Limpiar</a>{% endif %}</div>
+  </form>
+  <div class="chat-account-list" role="region" aria-label="Conversaciones por cuenta">
+    {% for account in chat_accounts %}<a class="chat-account-option" href="?view=chats&amp;user={{ account.pk }}" aria-label="Ver resumen de {{ account.username }}">
+      <div class="chat-account-identity"><span class="chat-account-avatar" aria-hidden="true">{{ account.username|first|upper }}</span><div><strong>{{ account.get_full_name|default:account.username }}</strong><small>@{{ account.username }}{% if not account.is_active %} · Inactiva{% endif %}</small></div></div>
+      <dl><div><dt>Conversaciones</dt><dd data-number="{{ account.history_count|add:account.trash_count }}">{{ account.history_count|add:account.trash_count }}</dd></div><div><dt>Tokens registrados</dt><dd {% if account.token_total != None %}data-number="{{ account.token_total }}"{% endif %}>{{ account.token_total|default_if_none:'—' }}</dd></div></dl>
+      <span class="chat-account-option-action">Ver resumen {% include 'postal/_icon.html' with name='arrow' %}</span>
+    </a>{% empty %}<div class="chat-picker-empty"><h3>No se encontraron cuentas</h3><p>Pruebe otro usuario, nombre o correo.</p><a class="button" href="?view=chats">Ver todas las cuentas</a></div>{% endfor %}
+  </div>
+  {% if chat_accounts.has_other_pages %}<nav class="system-actions" aria-label="Páginas de cuentas">{% if chat_accounts.has_previous %}<a href="?{{ chat_query }}&amp;page={{ chat_accounts.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ chat_accounts.number }} de {{ chat_accounts.paginator.num_pages }}</span>{% if chat_accounts.has_next %}<a href="?{{ chat_query }}&amp;page={{ chat_accounts.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+</section>
+{% endif %}
