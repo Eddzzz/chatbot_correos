@@ -1,6 +1,8 @@
 import uuid
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 
 class Conversation(models.Model):
@@ -57,6 +59,26 @@ class QueryJob(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+class QueryOutcome(models.Model):
+    """Operational metrics retained after the temporary result is deleted."""
+
+    job_id = models.UUIDField(primary_key=True)
+    created_at = models.DateTimeField(db_index=True)
+    status = models.CharField(max_length=20)
+
+
+@receiver(pre_delete, sender=QueryJob)
+def preserve_query_outcome(sender, instance, using, **kwargs):
+    status = instance.status
+    if status in ('queued', 'running'):
+        return
+    if status == 'error' and isinstance(instance.error, dict) and instance.error.get('code') == 'clarification':
+        status = 'clarification'
+    QueryOutcome.objects.using(using).bulk_create(
+        [QueryOutcome(job_id=instance.pk, created_at=instance.created_at, status=status)],
+        ignore_conflicts=True)
 
 
 class AIUsage(models.Model):

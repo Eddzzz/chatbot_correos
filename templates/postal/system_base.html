@@ -60,6 +60,13 @@
 </nav>
 <div class="system-account" title="{{ user.username }}"><span class="system-avatar">{{ user.username|first|upper }}</span><div><strong>{{ user.username }}</strong><span>{% if user.is_superuser %}Administrador{% else %}Usuario{% endif %}</span></div></div>
 <div class="system-sidebar-tools">
+<form class="system-logout-form" action="{% url 'logout' %}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="expected_user" value="{{ request.api_identity }}">
+  <button class="logout" type="submit" aria-label="Cerrar sesión" title="Cerrar sesión">
+    <span>Cerrar sesión</span>{% include 'postal/_icon.html' with name='exit' %}
+  </button>
+</form>
 <button id="system-theme" class="icon-button" type="button" aria-label="Cambiar tema" title="Cambiar tema">{% include 'postal/_icon.html' with name='moon' %}</button>
 <button id="system-collapse" type="button" class="icon-button" aria-controls="system-sidebar" aria-expanded="true" aria-label="Contraer barra lateral" title="Contraer barra lateral"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 4v16m8-12-4 4 4 4"/></svg></button></div>
 </aside>

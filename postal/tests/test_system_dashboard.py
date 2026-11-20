@@ -171,6 +171,45 @@ class SystemDashboardTests(TestCase):
         self.assertEqual(recent['clarifications'], 1)
         self.assertEqual(recent['success_rate'], 50)
 
+    def test_operations_follow_applied_period_after_results_expire(self):
+        from unittest.mock import patch
+
+        from django.core.management import call_command
+
+        for days_ago, status, error in [
+            (31, 'ok', {}),
+            (15, 'ok', {}),
+            (15, 'error', {'code': 'clarification'}),
+            (15, 'cancelled', {}),
+            (2, 'error', {}),
+            (0, 'ok', {}),
+            (0, 'running', {}),
+        ]:
+            job = QueryJob.objects.create(user=self.user, session_hash='qa', kind='chat', status=status, error=error)
+            at = self.now - timedelta(days=days_ago)
+            QueryJob.objects.filter(pk=job.pk).update(created_at=at, updated_at=at)
+
+        custom = {'days': 'custom', 'start': '2026-11-01', 'end': '2026-11-01'}
+        counts = ('success', 'failed', 'clarifications', 'cancelled', 'running', 'success_rate')
+        with patch('postal.system_analytics.timezone.now', return_value=self.now):
+            for cleanup in (False, True):
+                if cleanup:
+                    call_command('cleanup_results', verbosity=0)
+                    self.assertEqual(QueryJob.objects.count(), 2)
+                for params, days_label, expected in [
+                    ({'days': '1'}, '1 día', (1, 0, 0, 0, 1, 100)),
+                    ({'days': '7'}, '7 días', (1, 1, 0, 0, 1, 50)),
+                    ({'days': '30'}, '30 días', (2, 1, 1, 1, 1, 66.7)),
+                    ({'days': '90'}, '90 días', (3, 1, 1, 1, 1, 75)),
+                    ({**custom, 'live': '1'}, '1 día', (1, 0, 1, 1, 0, 100)),
+                ]:
+                    with self.subTest(cleanup=cleanup, params=params):
+                        response = self.client.get('/system/', params)
+                        jobs = response.context['analytics']['recent_jobs']
+                        self.assertEqual(tuple(jobs[key] for key in counts), expected)
+                        self.assertContains(response, f'período seleccionado.</p></div><span class="badge-soft">{days_label}</span>')
+                        self.assertContains(response, f'En curso: <strong>{expected[4]}</strong>')
+
     def test_partial_settings_do_not_disable_other_capabilities(self):
         from postal.system_config import save_config, configuration
         save_config({'SKILL_CHAT': True, 'SKILL_PDF': True, 'AI_MAX_TOKENS': 1000})
@@ -197,22 +236,32 @@ class SystemDashboardTests(TestCase):
             response = self.client.get('/system/')
         self.assertContains(response, 'Tokens disponibles')
         self.assertContains(response, 'Sin reporte de cuota')
-        self.assertContains(response, 'id="available-tokens" data-number="">—</dd>')
+        self.assertContains(response, 'id="available-tokens">—</dd>')
+        self.assertNotContains(response, '<meter class="kpi-quota-meter"')
         with patch('postal.system_views.token_availability', return_value={
                 'remaining': 0, 'limit': 6000, 'observed_at': timezone.now()}):
             response = self.client.get('/system/?days=90')
-        self.assertContains(response, 'id="available-tokens" data-number="0">0</dd>')
+        self.assertContains(response, 'id="available-tokens">0<span class="kpi-quota-limit">/6000</span></dd>')
+        self.assertContains(response, '<meter class="kpi-quota-meter" min="0" max="6000" value="0" aria-hidden="true">')
+        self.assertContains(response, 'Última cuota informada')
         self.assertContains(response, 'Por minuto')
+        with patch('postal.system_views.token_availability', return_value={
+                'remaining': 741, 'limit': None, 'observed_at': timezone.now()}):
+            response = self.client.get('/system/')
+        self.assertContains(response, 'id="available-tokens">741</dd>')
+        self.assertNotContains(response, '<meter class="kpi-quota-meter"')
 
-    def test_old_quota_is_visible_and_explicitly_identified_as_previous_report(self):
+    def test_old_quota_is_visible_with_its_report_time(self):
         from unittest.mock import patch
         with patch('postal.system_views.token_availability', return_value={
-                'remaining': 1234, 'limit': 6000, 'observed_at': timezone.now() - timedelta(minutes=5),
+                'remaining': 741, 'limit': 8000, 'observed_at': timezone.now() - timedelta(minutes=5),
                 'stale': True}):
             response = self.client.get('/system/?live=1')
-        self.assertContains(response, 'id="available-tokens" data-number="1234">1234</dd>')
+        self.assertContains(response, 'id="available-tokens">741<span class="kpi-quota-limit">/8000</span></dd>')
+        self.assertContains(response, '<meter class="kpi-quota-meter" min="0" max="8000" value="741" aria-hidden="true">')
         self.assertContains(response, 'Última cuota informada')
-        self.assertContains(response, 'Reporte anterior; la cuota actual puede variar.')
+        self.assertContains(response, 'Informado el <time datetime=')
+        self.assertNotContains(response, 'Reporte anterior; la cuota actual puede variar.')
 
     def test_overview_combines_usage_and_operations(self):
         response = self.client.get('/system/?days=7')

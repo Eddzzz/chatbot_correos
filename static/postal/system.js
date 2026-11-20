@@ -267,6 +267,10 @@
         card.querySelectorAll('.kpi-big-num, .agent-node-card strong').forEach(value => {
           play(value, [{opacity:0, transform:'translateY(6px)'}, {opacity:1, transform:'translateY(0)'}], delay + stagger);
         });
+        const icon = card.querySelector('.kpi-mini-icon');
+        if (icon) play(icon, [{transform:'scale(.85)'}, {transform:'scale(1)'}], delay + stagger);
+        const quota = card.querySelector('.kpi-quota-meter');
+        if (quota) play(quota, [{transform:'scaleX(0)'}, {transform:'scaleX(1)'}], delay + stagger);
         card.querySelectorAll('.dashboard-chart path[stroke][fill="none"]').forEach(path => {
           const length = path.getTotalLength();
           if (length > 0) play(path, [

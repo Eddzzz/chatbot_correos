@@ -2,33 +2,38 @@
 {{ chart_data|json_script:'dashboard-data' }}
 <dl class="dashboard-metrics reference-kpis">
   <div class="bento-cell bento-kpi is-hero">
-    <dt class="kpi-head"><span class="kpi-title">Tokens informados</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='plus' %}</span></dt>
+    <dt class="kpi-head"><span class="kpi-title">Tokens informados</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='database' %}</span></dt>
     <dd class="kpi-big-num" data-number="{{ analytics.totals.tokens|default_if_none:'' }}">{{ analytics.totals.tokens|default_if_none:'—' }}</dd>
-    <div class="kpi-sub-row"><span>Período previo</span><span data-number="{{ analytics.previous_tokens|default_if_none:'' }}">{{ analytics.previous_tokens|default_if_none:'—' }}</span></div>
   </div>
-  <div class="bento-cell bento-kpi">
-    <dt class="kpi-head"><span class="kpi-title">{% if available_tokens.stale %}Última cuota informada{% else %}Tokens disponibles{% endif %}</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='chart' %}</span></dt>
-    <dd class="kpi-big-num" id="available-tokens" data-number="{{ available_tokens.remaining|default_if_none:'' }}">{% if available_tokens %}{{ available_tokens.remaining }}{% else %}—{% endif %}</dd>
+  <div class="bento-cell bento-kpi is-quota">
+    <dt class="kpi-head"><span class="kpi-title">{% if available_tokens %}Última cuota informada{% else %}Tokens disponibles{% endif %}</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='activity' %}</span></dt>
+    {% if available_tokens %}
+    <dd class="kpi-big-num" id="available-tokens">{{ available_tokens.remaining|unlocalize }}{% if available_tokens.limit != None %}<span class="kpi-quota-limit">/{{ available_tokens.limit|unlocalize }}</span>{% endif %}</dd>
+    {% if available_tokens.limit > 0 %}
+    <div class="kpi-quota-track">
+      <meter class="kpi-quota-meter" min="0" max="{{ available_tokens.limit|unlocalize }}" value="{{ available_tokens.remaining|unlocalize }}" aria-hidden="true"></meter>
+    </div>
+    {% endif %}
+    {% else %}
+    <dd class="kpi-big-num" id="available-tokens">—</dd>
+    {% endif %}
     <div class="kpi-sub-row">
-      {% if available_tokens %}<span>{{ current_provider }} · Por minuto{% if available_tokens.limit != None %} · Límite {{ available_tokens.limit }}{% endif %}<br>Informado el <time datetime="{{ available_tokens.observed_at|date:'c' }}">{{ available_tokens.observed_at|date:'d/m H:i:s' }}</time>{% if available_tokens.stale %}<br>Reporte anterior; la cuota actual puede variar.{% endif %}</span>
+      {% if available_tokens %}<span>{{ current_provider }} · Por minuto<br>Informado el <time datetime="{{ available_tokens.observed_at|date:'c' }}">{{ available_tokens.observed_at|date:'d/m H:i:s' }}</time></span>
       {% elif current_provider == 'Groq' %}<span>Sin reporte de cuota.<br>Se obtiene cuando el proveedor responde al asistente.</span>
       {% else %}<span>El proveedor no informa esta cuota.</span>{% endif %}
     </div>
   </div>
-  <div class="bento-cell bento-kpi">
+  <div class="bento-cell bento-kpi is-generations">
     <dt class="kpi-head"><span class="kpi-title">Generaciones registradas</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='chart' %}</span></dt>
     <dd class="kpi-big-num" data-number="{{ analytics.totals.calls }}">{{ analytics.totals.calls }}</dd>
-    <div class="kpi-sub-row">Respuestas con datos de uso</div>
   </div>
-  <div class="bento-cell bento-kpi">
-    <dt class="kpi-head"><span class="kpi-title">Usuarios con actividad IA</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='shield' %}</span></dt>
+  <div class="bento-cell bento-kpi is-users">
+    <dt class="kpi-head"><span class="kpi-title">Usuarios con actividad IA</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='users' %}</span></dt>
     <dd class="kpi-big-num" data-number="{{ analytics.totals.users }}">{{ analytics.totals.users }}</dd>
-    <div class="kpi-sub-row">Cuentas con consumo registrado</div>
   </div>
-  <div class="bento-cell bento-kpi">
+  <div class="bento-cell bento-kpi is-chats">
     <dt class="kpi-head"><span class="kpi-title">Chats registrados</span><span class="kpi-mini-icon" aria-hidden="true">{% include 'postal/_icon.html' with name='chat' %}</span></dt>
     <dd class="kpi-big-num" data-number="{{ analytics.totals.chats }}">{{ analytics.totals.chats }}</dd>
-    <div class="kpi-sub-row">Guardados o importados en el período</div>
   </div>
 </dl>
 <div class="dashboard-grid bento-dashboard">
@@ -39,7 +44,7 @@
     <details class="dashboard-data-table bento-drawer"><summary>Ver datos del gráfico</summary><div class="system-table" tabindex="0" role="region" aria-label="Consumo {% if analytics.hourly %}por hora{% else %}diario{% endif %}"><table><thead><tr><th>{% if analytics.hourly %}Hora{% else %}Fecha{% endif %}</th><th class="num">Tokens</th><th class="num">Generaciones</th></tr></thead><tbody>{% for day in chart_data.daily %}<tr><td>{% if analytics.hourly %}{{ day.label }}{% else %}{{ day.date }}{% endif %}</td><td class="num">{{ day.tokens|default_if_none:'—' }}</td><td class="num">{{ day.calls|default_if_none:'—' }}</td></tr>{% endfor %}</tbody></table></div></details>
   </section>
   <section class="dashboard-panel dashboard-operations bento-cell span-4">
-    <div class="cell-head"><div class="cell-titles"><h2>Operación reciente</h2><p>Resolución de consultas en las últimas 24 h.</p></div><span class="badge-soft">24 h</span></div>
+    <div class="cell-head"><div class="cell-titles"><h2>Operación reciente</h2><p>Resolución de consultas del período seleccionado.</p></div><span class="badge-soft">{{ analytics.days }} día{{ analytics.days|pluralize:'s' }}</span></div>
     <div class="sla-Showcase">
       <div class="sla-donut" aria-hidden="true"><svg viewBox="0 0 68 68"><circle cx="34" cy="34" r="29" fill="none" stroke="var(--border-hairline)" stroke-width="6"/>{% if analytics.recent_jobs.success_rate != None %}<circle cx="34" cy="34" r="29" fill="none" stroke="var(--emerald-500)" stroke-width="6" stroke-linecap="round" pathLength="100" stroke-dasharray="{{ analytics.recent_jobs.success_rate|unlocalize }} 100"/>{% endif %}</svg><span class="sla-donut-center">{% if analytics.recent_jobs.success_rate != None %}{{ analytics.recent_jobs.success_rate }}%{% else %}—{% endif %}</span></div>
       <div class="sla-copy"><strong>{% if analytics.recent_jobs.success_rate != None %}{{ analytics.recent_jobs.success_rate }}%{% else %}—{% endif %}</strong><span>Éxito en trabajos resueltos</span></div>
@@ -50,8 +55,8 @@
       <div class="sla-stat-box"><dt class="sla-stat-label"><span class="sla-swatch is-error" aria-hidden="true"></span>Con error</dt><dd class="{% if analytics.recent_jobs.failed %}system-negative{% endif %}">{{ analytics.recent_jobs.failed }}</dd></div>
       <div class="sla-stat-box"><dt class="sla-stat-label"><span class="sla-swatch is-neutral" aria-hidden="true"></span>Cancelados</dt><dd>{{ analytics.recent_jobs.cancelled }}</dd></div>
     </dl>
-    <div class="cell-foot"><span>En curso: <strong>{{ active_jobs }}</strong></span></div>
-    <p>Las aclaraciones y cancelaciones no cuentan como fallos. Se incluyen resultados conservados de las últimas 24 h.</p>
+    <div class="cell-foot"><span>En curso: <strong>{{ analytics.recent_jobs.running }}</strong></span></div>
+    <p>Las aclaraciones y cancelaciones no cuentan como fallos.</p>
   </section>
   <section class="dashboard-panel bento-cell span-6">
     <div class="cell-head"><div class="cell-titles"><h2>Generaciones registradas</h2><p>Respuestas y reintentos con datos de uso informados por {% if analytics.hourly %}hora{% else %}día{% endif %}.</p></div><span class="badge-soft">Por {% if analytics.hourly %}hora{% else %}día{% endif %}</span></div>

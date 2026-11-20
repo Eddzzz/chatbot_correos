@@ -70,8 +70,9 @@ vence a los 60 segundos y se actualiza al recargar el panel después de una cons
 No genera llamadas adicionales de IA ni estima un saldo diario a partir del consumo local;
 los proveedores sin soporte muestran que no informan esta cuota.
 Un valor ausente se distingue de cero; no se reconstruye consumo anterior a su registro.
-La operación reciente muestra únicamente trabajos conservados de las últimas 24 horas;
-las aclaraciones y cancelaciones quedan fuera de la tasa de éxito. Las conexiones indican
+La operación reciente usa el período seleccionado y conserva el estado de las consultas cuando
+vencen sus resultados temporales. El historial comienza con las consultas disponibles al
+habilitar este registro. Las aclaraciones y cancelaciones quedan fuera de la tasa de éxito. Las conexiones indican
 configuración, no disponibilidad de un proveedor que no se ha comprobado.
 
 Cada área tiene su propia vista: modelos, red/DB, agentes, skills, conversaciones, estado

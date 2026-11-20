@@ -1,11 +1,11 @@
 """Administrative aggregates from local records; no provider or postal DB requests."""
 from datetime import datetime, time, timedelta
 
-from django.db.models import Count, Q, Sum
+from django.db.models import Case, Count, F, Sum, Value, When
 from django.db.models.functions import TruncDate, TruncHour
 from django.utils import timezone
 
-from .models import AIUsage, Conversation, QueryJob
+from .models import AIUsage, Conversation, QueryJob, QueryOutcome
 
 
 def dashboard_data(days=30, now=None, start_date=None, end_date=None):
@@ -51,14 +51,24 @@ def dashboard_data(days=30, now=None, start_date=None, end_date=None):
     users = list(usage.values('user_id', 'user__username').annotate(tokens=Sum('total_tokens'), calls=Count('id')).order_by('-tokens', 'user__username')[:8])
     chats = Conversation.objects.filter(created_at__gte=start, created_at__lte=until)
     totals['chats'] = chats.count()
-    recent = QueryJob.objects.filter(created_at__gte=now - timedelta(hours=24), created_at__lte=now)
-    jobs = recent.aggregate(total=Count('id'), success=Count('id', filter=Q(status__in=['ok', 'no_matches', 'empty_table'])),
-        failed=Count('id', filter=Q(status='error') & ~Q(error__code='clarification')),
-        clarifications=Count('id', filter=Q(status='error', error__code='clarification')),
-        cancelled=Count('id', filter=Q(status='cancelled')),
-        running=Count('id', filter=Q(status__in=['queued', 'running'])))
-    # JSON missing keys use SQL NULL; count failures explicitly without excluding absent codes.
-    jobs['failed'] = recent.filter(status='error').count() - jobs['clarifications']
+    recent = QueryJob.objects.filter(created_at__gte=start, created_at__lte=until)
+    live_counts = recent.annotate(outcome=Case(
+        When(status='error', error__code='clarification', then=Value('clarification')), default=F('status')
+    )).values_list('outcome').annotate(count=Count('pk')).order_by()
+    archived_counts = QueryOutcome.objects.filter(created_at__gte=start, created_at__lte=until).values_list(
+        'status').annotate(count=Count('pk')).order_by()
+    # Read both sources in one statement so concurrent cleanup cannot double-count or omit an outcome.
+    counts = {}
+    for status, count in live_counts.union(archived_counts, all=True):
+        counts[status] = counts.get(status, 0) + count
+    jobs = {
+        'total': sum(counts.values()),
+        'success': sum(counts.get(status, 0) for status in ('ok', 'no_matches', 'empty_table')),
+        'failed': counts.get('error', 0),
+        'clarifications': counts.get('clarification', 0),
+        'cancelled': counts.get('cancelled', 0),
+        'running': counts.get('queued', 0) + counts.get('running', 0),
+    }
     resolved = jobs['success'] + jobs['failed']
     jobs['success_rate'] = round(jobs['success'] * 100 / resolved, 1) if resolved else None
     return {'days': days, 'start': first.isoformat(), 'end': last.isoformat(), 'until': until.isoformat(), 'updated_at': timezone.localtime(now, tz).isoformat(),
