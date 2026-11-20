@@ -425,7 +425,6 @@ Esta comprobación usa el navegador real y respuestas HTTP simuladas; no envía 
 - `postal/operations.py`, `pdf.py`: rastreo, agregados y exportación.
 - `templates/`, `static/`: interfaz sin compilación; Chart.js y tipografía locales con licencias.
 - `data/catalog.json`: metadatos extraídos del respaldo, nunca filas de negocio.
-- `docs/superpowers/`: diseño aprobado, plan y registro de verificación.
 
 Referencias: [Django: autenticación](https://docs.djangoproject.com/en/5.2/topics/auth/default/), [modelo Groq](https://console.groq.com/docs/model/openai/gpt-oss-120b), [formato de salida Groq](https://console.groq.com/docs/structured-outputs), [PostgreSQL: transacciones y configuración](https://www.postgresql.org/docs/18/runtime-config-client.html).
 

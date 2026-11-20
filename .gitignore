@@ -31,6 +31,7 @@ htmlcov/
 # Generated reports and tooling files
 /.taste-skill/
 .superpowers/
+/docs/superpowers/
 /output/
 /tmp/
 node_modules/
